@@ -1,6 +1,4 @@
-// ** React Imports
-import { Fragment, lazy } from 'react'
-import { Navigate } from 'react-router-dom'
+import { Fragment } from 'react'
 // ** Layouts
 import BlankLayout from '@layouts/BlankLayout'
 import VerticalLayout from '@src/layouts/VerticalLayout'
@@ -9,6 +7,7 @@ import LayoutWrapper from '@src/@core/layouts/components/layout-wrapper'
 
 // ** Route Components
 import PublicRoute from '@components/routes/PublicRoute'
+import PrivateRoute from '@components/routes/PrivateRoute'
 
 // ** Utils
 import { isObjEmpty } from '@utils'
@@ -25,56 +24,13 @@ const TemplateTitle = '%s - Truevue Dashboard'
 // ** Default Route
 const DefaultRoute = '/home'
 
-const Home = lazy(() => import('../../views/Home'))
-const SecondPage = lazy(() => import('../../views/SecondPage'))
-const Login = lazy(() => import('../../views/Login'))
-const Register = lazy(() => import('../../views/Register'))
-const ForgotPassword = lazy(() => import('../../views/ForgotPassword'))
-const Error = lazy(() => import('../../views/Error'))
+import myRoutes from './myRoutes'
+import authRoutes from './authRoutes'
 
 // ** Merge Routes
 const Routes = [
-  {
-    path: '/',
-    index: true,
-    element: <Navigate replace to={DefaultRoute} />
-  },
-  {
-    path: '/home',
-    element: <Home />
-  },
-  {
-    path: '/second-page',
-    element: <SecondPage />
-  },
-  {
-    path: '/login',
-    element: <Login />,
-    meta: {
-      layout: 'blank'
-    }
-  },
-  {
-    path: '/register',
-    element: <Register />,
-    meta: {
-      layout: 'blank'
-    }
-  },
-  {
-    path: '/forgot-password',
-    element: <ForgotPassword />,
-    meta: {
-      layout: 'blank'
-    }
-  },
-  {
-    path: '/error',
-    element: <Error />,
-    meta: {
-      layout: 'blank'
-    }
-  }
+  ...authRoutes,
+  ...myRoutes
 ]
 
 const getRouteMeta = route => {
@@ -99,11 +55,12 @@ const MergeLayoutRoutes = (layout, defaultLayout) => {
         (route.meta && route.meta.layout && route.meta.layout === layout) ||
         ((route.meta === undefined || route.meta.layout === undefined) && defaultLayout === layout)
       ) {
-        const RouteTag = PublicRoute
+        let RouteTag = PrivateRoute
 
         // ** Check for public or private route
         if (route.meta) {
           route.meta.layout === 'blank' ? (isBlank = true) : (isBlank = false)
+          RouteTag = route.meta.publicRoute ? PublicRoute : PrivateRoute
         }
         if (route.element) {
           const Wrapper =

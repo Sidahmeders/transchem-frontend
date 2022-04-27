@@ -4,10 +4,25 @@ import { Facebook, Twitter, Mail, GitHub } from 'react-feather'
 import InputPasswordToggle from '@components/input-password-toggle'
 import { Row, Col, CardTitle, CardText, Form, Label, Input, Button } from 'reactstrap'
 import '@styles/react/pages/page-authentication.scss'
+import axios from 'axios'
+import { getHomeRouteForLoggedInUser } from '@utils'
+
+const signInHandler = async (event) => {
+  event.preventDefault()
+  const inputElements = document.getElementById('login-form').getElementsByTagName('input')
+  const userInfo = {}
+  Array.from(inputElements).forEach(input => (userInfo[input.type] = input.value))
+
+  const response = await axios.post('http://localhost:5000/api/auth/login', userInfo)
+  const { status, data } = response
+  if (status !== 200) return
+  
+  localStorage.setItem('userData', JSON.stringify(data))
+  location.href = getHomeRouteForLoggedInUser(data?.role)
+}
 
 const Login = () => {
   const { skin } = useSkin()
-
   const illustration = skin === 'dark' ? 'login-v2-dark.svg' : 'login-v2.svg',
     source = require(`@src/assets/images/pages/${illustration}`).default
 
@@ -63,7 +78,7 @@ const Login = () => {
               </g>
             </g>
           </svg>
-          <h2 className='brand-text text-primary ms-1'>Truevue</h2>
+          <h2 className='brand-text text-primary ms-1'>TrueVue</h2>
         </Link>
         <Col className='d-none d-lg-flex align-items-center p-5' lg='8' sm='12'>
           <div className='w-100 d-lg-flex align-items-center justify-content-center px-5'>
@@ -73,10 +88,10 @@ const Login = () => {
         <Col className='d-flex align-items-center auth-bg px-2 p-lg-5' lg='4' sm='12'>
           <Col className='px-xl-2 mx-auto' sm='8' md='6' lg='12'>
             <CardTitle tag='h2' className='fw-bold mb-1'>
-              Welcome to Truevue! 👋
+              Welcome to TrueVue 👋
             </CardTitle>
             <CardText className='mb-2'>Please sign-in to your account and start the adventure</CardText>
-            <Form className='auth-login-form mt-2' onSubmit={e => e.preventDefault()}>
+            <Form id='login-form' className='auth-login-form mt-2' onSubmit={signInHandler}>
               <div className='mb-1'>
                 <Label className='form-label' for='login-email'>
                   Email
@@ -100,7 +115,7 @@ const Login = () => {
                   Remember Me
                 </Label>
               </div>
-              <Button tag={Link} to='/' color='primary' block>
+              <Button color='primary' block>
                 Sign in
               </Button>
             </Form>
