@@ -1,204 +1,38 @@
-// ** React Imports
-import { Fragment, useState } from 'react'
-import { Link } from 'react-router-dom'
-
-// ** Reactstrap Imports
+import { Fragment, useState, useEffect } from 'react'
 import {
   Row,
   Col,
-  Card,
   Label,
   Input,
   Table,
   Modal,
   Button,
-  CardBody,
   ModalBody,
   ModalHeader,
   FormFeedback,
   UncontrolledTooltip
 } from 'reactstrap'
-
-// ** Third Party Components
-import { Copy, Info } from 'react-feather'
+import { Info } from 'react-feather'
 import { useForm, Controller } from 'react-hook-form'
+import axios from 'axios'
 
-// ** Custom Components
-import AvatarGroup from '@components/avatar-group'
+import CardItem from './CardItem'
+import AddNewRoleItem from './addNewRoleItem'
 
-// ** FAQ Illustrations
-import illustration from '@src/assets/images/illustration/faq-illustrations.svg'
-
-// ** Vars
-const data = [
-  {
-    totalUsers: 4,
-    title: 'Administrator',
-    users: [
-      {
-        size: 'sm',
-        title: 'Vinnie Mostowy',
-        img: require('@src/assets/images/avatars/2.png').default
-      },
-      {
-        size: 'sm',
-        title: 'Allen Rieske',
-        img: require('@src/assets/images/avatars/12.png').default
-      },
-      {
-        size: 'sm',
-        title: 'Julee Rossignol',
-        img: require('@src/assets/images/avatars/6.png').default
-      },
-      {
-        size: 'sm',
-        title: 'Kaith Dsouza',
-        img: require('@src/assets/images/avatars/11.png').default
-      }
-    ]
-  },
-  {
-    totalUsers: 7,
-    title: 'Manager',
-    users: [
-      {
-        size: 'sm',
-        title: 'Jimmy Ressula',
-        img: require('@src/assets/images/avatars/4.png').default
-      },
-      {
-        size: 'sm',
-        title: 'John Doe',
-        img: require('@src/assets/images/avatars/1.png').default
-      },
-      {
-        size: 'sm',
-        title: 'Kristi Lawker',
-        img: require('@src/assets/images/avatars/2.png').default
-      },
-      {
-        size: 'sm',
-        title: 'Kaith D',
-        img: require('@src/assets/images/avatars/5.png').default
-      },
-      {
-        size: 'sm',
-        title: 'Danny Paul',
-        img: require('@src/assets/images/avatars/7.png').default
-      }
-    ]
-  },
-  {
-    totalUsers: 5,
-    title: 'Users',
-    users: [
-      {
-        size: 'sm',
-        title: 'Andrew Tye',
-        img: require('@src/assets/images/avatars/6.png').default
-      },
-      {
-        size: 'sm',
-        title: 'Rishi Swaat',
-        img: require('@src/assets/images/avatars/9.png').default
-      },
-      {
-        size: 'sm',
-        title: 'Rossie Kim',
-        img: require('@src/assets/images/avatars/2.png').default
-      },
-      {
-        size: 'sm',
-        title: 'Kim Merchent',
-        img: require('@src/assets/images/avatars/10.png').default
-      },
-      {
-        size: 'sm',
-        title: 'Sam Dsouza',
-        img: require('@src/assets/images/avatars/8.png').default
-      }
-    ]
-  },
-  {
-    totalUsers: 3,
-    title: 'Support',
-    users: [
-      {
-        size: 'sm',
-        title: 'Kim Karlos',
-        img: require('@src/assets/images/avatars/3.png').default
-      },
-      {
-        size: 'sm',
-        title: 'Katy Turner',
-        img: require('@src/assets/images/avatars/9.png').default
-      },
-      {
-        size: 'sm',
-        title: 'Peter Adward',
-        img: require('@src/assets/images/avatars/12.png').default
-      },
-      {
-        size: 'sm',
-        title: 'Kaith Dsouza',
-        img: require('@src/assets/images/avatars/10.png').default
-      },
-      {
-        size: 'sm',
-        title: 'John Parker',
-        img: require('@src/assets/images/avatars/11.png').default
-      }
-    ]
-  },
-  {
-    totalUsers: 2,
-    title: 'Restricted User',
-    users: [
-      {
-        size: 'sm',
-        title: 'Kim Merchent',
-        img: require('@src/assets/images/avatars/10.png').default
-      },
-      {
-        size: 'sm',
-        title: 'Sam Dsouza',
-        img: require('@src/assets/images/avatars/6.png').default
-      },
-      {
-        size: 'sm',
-        title: 'Nurvi Karlos',
-        img: require('@src/assets/images/avatars/3.png').default
-      },
-      {
-        size: 'sm',
-        title: 'Andrew Tye',
-        img: require('@src/assets/images/avatars/8.png').default
-      },
-      {
-        size: 'sm',
-        title: 'Rossie Kim',
-        img: require('@src/assets/images/avatars/9.png').default
-      }
-    ]
-  }
-]
-
-const rolesArr = [
-  'User Management',
-  'Content Management',
-  'Disputes Management',
-  'Database Management',
-  'Financial Management',
-  'Reporting',
-  'API Control',
-  'Repository Management',
-  'Payroll'
-]
+const fetchRoles = async (setData, setRolesArr) => {
+  const response = await axios.get('http://localhost:5000/api/access/roles')
+  if (response.status !== 200) return null
+  const { data, rolesArr } = response.data
+  setData(() => data)
+  setRolesArr(() => rolesArr)
+}
 
 const RoleCards = () => {
   // ** States
   const [show, setShow] = useState(false)
   const [modalType, setModalType] = useState('Add New')
+  const [data, setData] = useState([])
+  const [rolesArr, setRolesArr] = useState([])
 
   // ** Hooks
   const {
@@ -230,69 +64,13 @@ const RoleCards = () => {
     setValue('roleName')
   }
 
+  useEffect(() => {
+    fetchRoles(setData, setRolesArr)
+  }, [])
+
   return (
     <Fragment>
-      <Row>
-        {data.map((item, index) => {
-          return (
-            <Col key={index} xl={4} md={6}>
-              <Card>
-                <CardBody>
-                  <div className='d-flex justify-content-between'>
-                    <span>{`Total ${item.totalUsers} users`}</span>
-                    <AvatarGroup data={item.users} />
-                  </div>
-                  <div className='d-flex justify-content-between align-items-end mt-1 pt-25'>
-                    <div className='role-heading'>
-                      <h4 className='fw-bolder'>{item.title}</h4>
-                      <Link
-                        to='/'
-                        className='role-edit-modal'
-                        onClick={e => {
-                          e.preventDefault()
-                          setModalType('Edit')
-                          setShow(true)
-                        }}
-                      >
-                        <small className='fw-bolder'>Edit Role</small>
-                      </Link>
-                    </div>
-                    <Link to='' className='text-body' onClick={e => e.preventDefault()}>
-                      <Copy className='font-medium-5' />
-                    </Link>
-                  </div>
-                </CardBody>
-              </Card>
-            </Col>
-          )
-        })}
-        <Col xl={4} md={6}>
-          <Card>
-            <Row>
-              <Col sm={5}>
-                <div className='d-flex align-items-end justify-content-center h-100'>
-                  <img className='img-fluid mt-2' src={illustration} alt='Image' width={85} />
-                </div>
-              </Col>
-              <Col sm={7}>
-                <CardBody className='text-sm-end text-center ps-sm-0'>
-                  <Button
-                    color='primary'
-                    className='text-nowrap mb-1'
-                    onClick={() => {
-                      setModalType('Add New')
-                      setShow(true)
-                    }}
-                  >
-                    Add New Role
-                  </Button>
-                  <p className='mb-0'>Add a new role, if it does not exist</p>
-                </CardBody>
-              </Col>
-            </Row>
-          </Card>
-        </Col>
-      </Row>
+      <RoleCard data={data} setModalType={setModalType} setShow={setShow} />
       <Modal
         isOpen={show}
         onClosed={handleModalClosed}
@@ -306,19 +84,7 @@ const RoleCards = () => {
             <p>Set role permissions</p>
           </div>
           <Row tag='form' onSubmit={handleSubmit(onSubmit)}>
-            <Col xs={12}>
-              <Label className='form-label' for='roleName'>
-                Role Name
-              </Label>
-              <Controller
-                name='roleName'
-                control={control}
-                render={({ field }) => (
-                  <Input {...field} id='roleName' placeholder='Enter role name' invalid={errors.roleName && true} />
-                )}
-              />
-              {errors.roleName && <FormFeedback>Please enter a valid role name</FormFeedback>}
-            </Col>
+            <RoleNameSearchInput control={control} errors={errors} />
             <Col xs={12}>
               <h4 className='mt-2 pt-50'>Role Permissions</h4>
               <Table className='table-flush-spacing' responsive>
@@ -340,51 +106,79 @@ const RoleCards = () => {
                       </div>
                     </td>
                   </tr>
-                  {rolesArr.map((role, index) => {
-                    return (
-                      <tr key={index}>
-                        <td className='text-nowrap fw-bolder'>{role}</td>
-                        <td>
-                          <div className='d-flex'>
-                            <div className='form-check me-3 me-lg-5'>
-                              <Input type='checkbox' id={`read-${role}`} />
-                              <Label className='form-check-label' for={`read-${role}`}>
-                                Read
-                              </Label>
-                            </div>
-                            <div className='form-check me-3 me-lg-5'>
-                              <Input type='checkbox' id={`write-${role}`} />
-                              <Label className='form-check-label' for={`write-${role}`}>
-                                Write
-                              </Label>
-                            </div>
-                            <div className='form-check'>
-                              <Input type='checkbox' id={`create-${role}`} />
-                              <Label className='form-check-label' for={`create-${role}`}>
-                                Create
-                              </Label>
-                            </div>
-                          </div>
-                        </td>
-                      </tr>
-                    )
-                  })}
+                  {rolesArr.map((role, index) => (<RoleNameItem key={index} role={role} />))}
                 </tbody>
               </Table>
             </Col>
-            <Col className='text-center mt-2' xs={12}>
-              <Button type='submit' color='primary' className='me-1'>
-                Submit
-              </Button>
-              <Button type='reset' outline onClick={onReset}>
-                Discard
-              </Button>
-            </Col>
+            <RoleButtons onReset={onReset} />
           </Row>
         </ModalBody>
       </Modal>
     </Fragment>
   )
 }
+
+const RoleNameSearchInput = ({ control, errors }) => (
+  <Col xs={12}>
+    <Label className='form-label' for='roleName'>
+      Role Name
+    </Label>
+    <Controller
+      name='roleName'
+      control={control}
+      render={({ field }) => (
+        <Input {...field} id='roleName' placeholder='Enter role name' invalid={errors.roleName && true} />
+      )}
+    />
+    {errors.roleName && <FormFeedback>Please enter a valid role name</FormFeedback>}
+  </Col>
+)
+
+
+const RoleCard = ({ data, setModalType, setShow }) => {
+  return (
+    <Row>
+      {data.map((item, index) => (
+        <CardItem key={index} item={item} setModalType={setModalType} setShow={setShow} /> 
+      ))}
+      <AddNewRoleItem setModalType={setModalType} setShow={setShow} />
+    </Row>
+  )
+}
+
+const RoleNameItem = ({ role }) => {
+  return (
+    <tr>
+      <td className='text-nowrap fw-bolder'>{role}</td>
+      <td>
+        <div className='d-flex'>
+          <RoleAction label='Read' role={role} />
+          <RoleAction label='Write' role={role} />
+          <RoleAction label='Create' role={role} />
+        </div>
+      </td>
+    </tr>
+  )
+}
+
+const RoleAction = ({ label, role }) => (
+  <div className='form-check me-3 me-lg-5'>
+    <Input type='checkbox' id={`read-${role}`} />
+    <Label className='form-check-label' for={`read-${role}`}>
+      {label}
+    </Label>
+  </div>
+)
+
+const RoleButtons = ({ onReset }) => (
+  <Col className='text-center mt-2' xs={12}>
+    <Button type='submit' color='primary' className='me-1'>
+      Submit
+    </Button>
+    <Button type='reset' outline onClick={onReset}>
+      Discard
+    </Button>
+  </Col>
+)
 
 export default RoleCards
