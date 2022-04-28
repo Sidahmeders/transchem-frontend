@@ -1,18 +1,16 @@
+import '@styles/react/libs/react-select/_react-select.scss'
+import '@styles/react/libs/tables/react-dataTable-component.scss'
 import { Fragment, useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import DataTable from 'react-data-table-component'
 import { ChevronDown } from 'react-feather'
 import { Card } from 'reactstrap'
-
 import { getAllData, getData } from '@store/user'
-
 import { columns, ExpandableTable } from './columns'
 import Sidebar from './Sidebar'
 import CustomHeader from './CustomHeader'
 import CustomPagination from './CustomPagination'
-
-import '@styles/react/libs/react-select/_react-select.scss'
-import '@styles/react/libs/tables/react-dataTable-component.scss'
+import EditUser from './EditUser'
 
 const UsersTable = () => {
   // ** Store Vars
@@ -26,6 +24,7 @@ const UsersTable = () => {
   const [sortColumn, setSortColumn] = useState('id')
   const [rowsPerPage, setRowsPerPage] = useState(10)
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [show, setShow] = useState(false)
 
   // ** Function to toggle sidebar
   const toggleSidebar = () => setSidebarOpen(!sidebarOpen)
@@ -87,7 +86,6 @@ const UsersTable = () => {
     )
     setCurrentPage(page.selected + 1)
   }
-  
 
   // ** Table data to render
   const dataToRender = () => {
@@ -126,6 +124,7 @@ const UsersTable = () => {
     <Fragment>
       <Card className='overflow-hidden'>
         <div className='react-dataTable'>
+          <EditUser show={show} setShow={setShow} />
           <DataTable
             noHeader
             subHeader
@@ -140,7 +139,10 @@ const UsersTable = () => {
             className='react-dataTable'
             expandableRowsComponent={ExpandableTable}
             paginationComponent={() => <CustomPagination handlePagination={handlePagination} currentPage={currentPage} count={count} />}
-            data={dataToRender()}
+            data={dataToRender().map((data) => {
+              const newData = {...data, setShow }
+              return newData
+            })}
             subHeaderComponent={
               <CustomHeader
                 count={store}
@@ -151,7 +153,6 @@ const UsersTable = () => {
                 toggleSidebar={toggleSidebar}
               />
             }
-            
           />
         </div>
       </Card>

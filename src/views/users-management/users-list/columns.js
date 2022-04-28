@@ -4,7 +4,7 @@ import Avatar from '@components/avatar'
 // ** Store & Actions
 import { store } from '@store/store'
 import { getUser } from '@store/user'
-import { Slack, User, Settings, Database, Edit2, Edit, Trash2, MoreHorizontal } from 'react-feather'
+import { Slack, User, Settings, Database, Edit2, Edit, Trash2 } from 'react-feather'
 import { Badge } from 'reactstrap'
 
 // ** Renders Client Columns
@@ -126,12 +126,11 @@ export const columns = [
   {
     name: 'More Actions',
     minWidth: '150px',
-    cell: () => {
+    cell: (row) => {
       return (
         <div className='d-flex'>
-          <MoreHorizontal size={15} />
           <span className='ms-2'></span>
-          <Edit size={15} />
+          <Edit size={15} onClick={() => row.setShow(true)} />
           <span className='ms-2'></span>
           <Trash2 size={15} />
         </div>
@@ -145,13 +144,13 @@ export const ExpandableTable = ({ data }) => {
   return (
     <div className='expandable-content p-2'>
       <p>
-        <span style={{color:'#139'}} className='fw-bold'>Request Title:</span> {data.company}
+        <span style={{color:'#15d'}} className='fw-bold'>Company:</span> {data.company}
       </p>
       <p>
-        <span style={{color:'#139'}} className='fw-bold'>Requested By:</span> {data.fullName}
+        <span style={{color:'#15d'}} className='fw-bold'>fullName:</span> {data.fullName}
       </p>
       <p className='m-0'>
-        <span style={{color:'#139'}} className='fw-bold'>Site Email:</span> {data.email}
+        <span style={{color:'#15d'}} className='fw-bold'>Email:</span> {data.email}
       </p>
     </div>
   )

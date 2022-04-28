@@ -80,7 +80,7 @@ export default function CustomHeader({ store, toggleSidebar, handlePerPage, rows
               </DropdownMenu>
             </UncontrolledDropdown>
             <Button className='add-new-user' color='primary' onClick={toggleSidebar}>
-              Add New User
+              Add User
             </Button>
           </div>
         </Col>
