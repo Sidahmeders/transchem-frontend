@@ -5,7 +5,8 @@ import { ChevronDown } from 'react-feather'
 import { Card } from 'reactstrap'
 
 import { getAllData, getData } from '@store/user'
-import { columns } from './columns'
+
+import { columns, ExpandableTable } from './columns'
 import Sidebar from './Sidebar'
 import CustomHeader from './CustomHeader'
 import CustomPagination from './CustomPagination'
@@ -132,10 +133,12 @@ const UsersTable = () => {
             pagination
             responsive
             paginationServer
+            expandableRows
             columns={columns}
             onSort={handleSort}
             sortIcon={<ChevronDown />}
             className='react-dataTable'
+            expandableRowsComponent={ExpandableTable}
             paginationComponent={() => <CustomPagination handlePagination={handlePagination} currentPage={currentPage} count={count} />}
             data={dataToRender()}
             subHeaderComponent={
@@ -148,6 +151,7 @@ const UsersTable = () => {
                 toggleSidebar={toggleSidebar}
               />
             }
+            
           />
         </div>
       </Card>

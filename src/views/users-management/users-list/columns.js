@@ -3,10 +3,9 @@ import Avatar from '@components/avatar'
 
 // ** Store & Actions
 import { store } from '@store/store'
-import { getUser, deleteUser } from '@store/user'
-
-import { Slack, User, Settings, Database, Edit2, MoreVertical, FileText, Trash2, Archive } from 'react-feather'
-import { Badge, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap'
+import { getUser } from '@store/user'
+import { Slack, User, Settings, Database, Edit2, Edit, Trash2, MoreHorizontal } from 'react-feather'
+import { Badge } from 'reactstrap'
 
 // ** Renders Client Columns
 const renderClient = row => {
@@ -125,43 +124,35 @@ export const columns = [
     )
   },
   {
-    name: 'Actions',
-    minWidth: '100px',
-    cell: row => (
-      <div className='column-action'>
-        <UncontrolledDropdown>
-          <DropdownToggle tag='div' className='btn btn-sm'>
-            <MoreVertical size={14} className='cursor-pointer' />
-          </DropdownToggle>
-          <DropdownMenu>
-            <DropdownItem
-              tag={Link}
-              className='w-100'
-              to={`/apps/user/view/${row.id}`}
-              onClick={() => store.dispatch(getUser(row.id))}
-            >
-              <FileText size={14} className='me-50' />
-              <span className='align-middle'>Details</span>
-            </DropdownItem>
-            <DropdownItem tag='a' href='/' className='w-100' onClick={e => e.preventDefault()}>
-              <Archive size={14} className='me-50' />
-              <span className='align-middle'>Edit</span>
-            </DropdownItem>
-            <DropdownItem
-              tag='a'
-              href='/'
-              className='w-100'
-              onClick={e => {
-                e.preventDefault()
-                store.dispatch(deleteUser(row.id))
-              }}
-            >
-              <Trash2 size={14} className='me-50' />
-              <span className='align-middle'>Delete</span>
-            </DropdownItem>
-          </DropdownMenu>
-        </UncontrolledDropdown>
-      </div>
-    )
+    name: 'More Actions',
+    minWidth: '150px',
+    cell: () => {
+      return (
+        <div className='d-flex'>
+          <MoreHorizontal size={15} />
+          <span className='ms-2'></span>
+          <Edit size={15} />
+          <span className='ms-2'></span>
+          <Trash2 size={15} />
+        </div>
+      )
+    }
   }
 ]
+
+// ** Expandable table component
+export const ExpandableTable = ({ data }) => {
+  return (
+    <div className='expandable-content p-2'>
+      <p>
+        <span style={{color:'#139'}} className='fw-bold'>Request Title:</span> {data.company}
+      </p>
+      <p>
+        <span style={{color:'#139'}} className='fw-bold'>Requested By:</span> {data.fullName}
+      </p>
+      <p className='m-0'>
+        <span style={{color:'#139'}} className='fw-bold'>Site Email:</span> {data.email}
+      </p>
+    </div>
+  )
+}

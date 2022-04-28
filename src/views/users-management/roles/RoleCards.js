@@ -6,18 +6,14 @@ import {
   Input,
   Table,
   Modal,
-  Button,
   ModalBody,
   ModalHeader,
-  FormFeedback,
   UncontrolledTooltip
 } from 'reactstrap'
 import { Info } from 'react-feather'
-import { useForm, Controller } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 import axios from 'axios'
-
-import CardItem from './CardItem'
-import AddNewRoleItem from './addNewRoleItem'
+import { CardItem, AddNewRoleItem, RoleAction, RoleButtons, RoleNameSearchInput } from './Components'
 
 const fetchRoles = async (setData, setRolesArr) => {
   const response = await axios.get('http://localhost:5000/api/access/roles')
@@ -118,23 +114,6 @@ const RoleCards = () => {
   )
 }
 
-const RoleNameSearchInput = ({ control, errors }) => (
-  <Col xs={12}>
-    <Label className='form-label' for='roleName'>
-      Role Name
-    </Label>
-    <Controller
-      name='roleName'
-      control={control}
-      render={({ field }) => (
-        <Input {...field} id='roleName' placeholder='Enter role name' invalid={errors.roleName && true} />
-      )}
-    />
-    {errors.roleName && <FormFeedback>Please enter a valid role name</FormFeedback>}
-  </Col>
-)
-
-
 const RoleCard = ({ data, setModalType, setShow }) => {
   return (
     <Row>
@@ -160,25 +139,5 @@ const RoleNameItem = ({ role }) => {
     </tr>
   )
 }
-
-const RoleAction = ({ label, role }) => (
-  <div className='form-check me-3 me-lg-5'>
-    <Input type='checkbox' id={`read-${role}`} />
-    <Label className='form-check-label' for={`read-${role}`}>
-      {label}
-    </Label>
-  </div>
-)
-
-const RoleButtons = ({ onReset }) => (
-  <Col className='text-center mt-2' xs={12}>
-    <Button type='submit' color='primary' className='me-1'>
-      Submit
-    </Button>
-    <Button type='reset' outline onClick={onReset}>
-      Discard
-    </Button>
-  </Col>
-)
 
 export default RoleCards
