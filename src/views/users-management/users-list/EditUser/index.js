@@ -1,22 +1,9 @@
 import '@styles/react/libs/react-select/_react-select.scss'
 import { Fragment } from 'react'
-import {
-  Row,
-  Col,
-  Modal,
-  Input,
-  Label,
-  Button,
-  ModalBody,
-  ModalHeader,
-  FormFeedback
-} from 'reactstrap'
-
-import Select from 'react-select'
-import { Check, X } from 'react-feather'
-import { useForm, Controller } from 'react-hook-form'
-import { selectThemeColors } from '@utils'
+import { useForm } from 'react-hook-form'
 import { statusOptions, countryOptions, languageOptions, defaultValues } from './data'
+import { TextInput, TextInputValidation, SelectBox, CheckBox, SubmitButton } from './FormInputs'
+import { Row, Modal, ModalBody, ModalHeader } from 'reactstrap'
 
 const EditUser = ({ show, setShow }) => {
   const {
@@ -50,139 +37,17 @@ const EditUser = ({ show, setShow }) => {
             <p>Updating user details will receive a privacy audit.</p>
           </div>
           <Row tag='form' className='gy-1 pt-75' onSubmit={handleSubmit(onSubmit)}>
-            <Col md={6} xs={12}>
-              <Label className='form-label' for='firstName'>
-                First Name
-              </Label>
-              <Controller
-                control={control}
-                name='firstName'
-                render={({ field }) => {
-                  return (
-                    <Input
-                      {...field}
-                      id='firstName'
-                      placeholder='John'
-                      value={field.value}
-                      invalid={errors.firstName && true}
-                    />
-                  )
-                }}
-              />
-              {errors.firstName && <FormFeedback>Please enter a valid First Name</FormFeedback>}
-            </Col>
-            <Col md={6} xs={12}>
-              <Label className='form-label' for='lastName'>
-                Last Name
-              </Label>
-              <Controller
-                name='lastName'
-                control={control}
-                render={({ field }) => (
-                  <Input {...field} id='lastName' placeholder='Doe' invalid={errors.lastName && true} />
-                )}
-              />
-              {errors.lastName && <FormFeedback>Please enter a valid Last Name</FormFeedback>}
-            </Col>
-            <Col xs={12}>
-              <Label className='form-label' for='username'>
-                Username
-              </Label>
-              <Controller
-                name='username'
-                control={control}
-                render={({ field }) => (
-                  <Input {...field} id='username' placeholder='john.doe.007' invalid={errors.username && true} />
-                )}
-              />
-              {errors.username && <FormFeedback>Please enter a valid Username</FormFeedback>}
-            </Col>
-            <Col md={6} xs={12}>
-              <Label className='form-label' for='email'>
-                Billing Email
-              </Label>
-              <Input type='email' id='email' placeholder='example@domain.com' />
-            </Col>
-            <Col md={6} xs={12}>
-              <Label className='form-label' for='status'>
-                Status:
-              </Label>
-              <Select
-                id='status'
-                isClearable={false}
-                className='react-select'
-                classNamePrefix='select'
-                options={statusOptions}
-                theme={selectThemeColors}
-                defaultValue={statusOptions[0]}
-              />
-            </Col>
-            <Col md={6} xs={12}>
-              <Label className='form-label' for='tax-id'>
-                Tax ID
-              </Label>
-              <Input id='tax-id' defaultValue='Tax-8894' placeholder='Tax-1234' />
-            </Col>
-            <Col md={6} xs={12}>
-              <Label className='form-label' for='contact'>
-                Contact
-              </Label>
-              <Input id='contact' defaultValue='+1 609 933 4422' placeholder='+1 609 933 4422' />
-            </Col>
-            <Col md={6} xs={12}>
-              <Label className='form-label' for='language'>
-                Language
-              </Label>
-              <Select
-                id='language'
-                isClearable={false}
-                className='react-select'
-                classNamePrefix='select'
-                options={languageOptions}
-                theme={selectThemeColors}
-                defaultValue={languageOptions[0]}
-              />
-            </Col>
-            <Col md={6} xs={12}>
-              <Label className='form-label' for='country'>
-                Country
-              </Label>
-              <Select
-                id='country'
-                isClearable={false}
-                className='react-select'
-                classNamePrefix='select'
-                options={countryOptions}
-                theme={selectThemeColors}
-                defaultValue={countryOptions[0]}
-              />
-            </Col>
-            <Col xs={12}>
-              <div className='d-flex align-items-center'>
-                <div className='form-switch'>
-                  <Input type='switch' defaultChecked id='billing-switch' name='billing-switch' />
-                  <Label className='form-check-label' htmlFor='billing-switch'>
-                    <span className='switch-icon-left'>
-                      <Check size={14} />
-                    </span>
-                    <span className='switch-icon-right'>
-                      <X size={14} />
-                    </span>
-                  </Label>
-                </div>
-                <Label className='form-check-label fw-bolder' htmlFor='billing-switch'>
-                  Use as a billing address?
-                </Label>
-              </div>
-            </Col>
-            <Col xs={12} className='text-center mt-2 pt-50'>
-              <Button type='submit' className='me-1' color='primary'>
-                Submit
-              </Button>
-              <Button type='reset' color='secondary' outline onClick={() => setShow(false)}>
-                Discard
-              </Button>
-            </Col>
+            <TextInputValidation control={control} errors={errors} label='FirstName' />
+            <TextInputValidation control={control} errors={errors} label='LastName' />
+            <TextInputValidation control={control} errors={errors} label='Username' />
+            <TextInput label='Billing Email' keyName='email' defaultValue='example@domain.com' />
+            <SelectBox placeholder='Status' options={statusOptions} />
+            <TextInput label='Tax ID' keyName='tax-id' defaultValue='Tax-8894' />
+            <TextInput label='Contact' keyName='contact' defaultValue='+1 609 933 4422' />
+            <SelectBox label='Language' options={languageOptions} />
+            <SelectBox label='Country' options={countryOptions} />
+            <CheckBox keyName='billing-switch' label='Use as a billing address?' />
+            <SubmitButton setShow={setShow} />
           </Row>
         </ModalBody>
       </Modal>

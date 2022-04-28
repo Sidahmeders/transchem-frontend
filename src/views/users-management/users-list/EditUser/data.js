@@ -21,7 +21,7 @@ export const languageOptions = [
 ]
 
 export const defaultValues = {
-  firstName: 'Bob',
-  lastName: 'Barton',
-  username: 'bob.dev'
+  FirstName: 'Bob',
+  LastName: 'Barton',
+  Username: 'bob.dev'
 }
