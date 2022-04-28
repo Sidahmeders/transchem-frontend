@@ -1,10 +1,9 @@
 import { Link } from 'react-router-dom'
-import { Row, Col, Card, Button, CardBody, Input, Label, FormFeedback } from 'reactstrap'
+import { Row, Col, Card, Button, CardBody, Input, Label, FormFeedback, UncontrolledTooltip } from 'reactstrap'
 import illustration from '@src/assets/images/illustration/faq-illustrations.svg'
-import { Copy } from 'react-feather'
+import { Copy, Info } from 'react-feather'
 import { Controller } from 'react-hook-form'
 import AvatarGroup from '@components/avatar-group'
-
 
 export function CardItem({ item, setModalType, setShow }) {
   const showRoleEdit = (event) => {
@@ -67,14 +66,43 @@ export function AddNewRoleItem({ setModalType, setShow }) {
   )
 }
 
-export const RoleAction = ({ label, role }) => (
-  <div className='form-check me-3 me-lg-5'>
-    <Input type='checkbox' id={`read-${role}`} />
-    <Label className='form-check-label' for={`read-${role}`}>
-      {label}
-    </Label>
-  </div>
-)
+export const RoleAction = ({ label, role, state, setState }) => {
+  const handleBoxCheck = () => setState(() => ({...state, [label]: !state[label]}))
+  return ( 
+    <div className='form-check me-3 me-lg-5'>
+      <Input onChange={handleBoxCheck} checked={state[label]} type='checkbox' id={`read-${role}`} />
+      <Label className='form-check-label' for={`read-${role}`}>{label}</Label>
+    </div>
+  )
+}
+
+export const CRUDAccess = ({ state, setState }) => {
+  const handleBoxCheck = () => {
+    if (state.crud) {
+      setState(() => ({...state, crud: false}))
+      return
+    }
+    const newState = Object.keys(state).reduce((prev, curr) => ({...prev, [curr]: true}), {})
+    setState(() => newState)
+  }
+
+  return (
+    <>
+      <div className='d-flex flex-row form-check me-3 me-lg-5'>
+        <div>
+          <Input onChange={handleBoxCheck} checked={state.crud} type='checkbox' id='select-all' />
+          <Label className='d-flex flex-row form-check-label' for='select-all'>CRUD</Label>
+        </div>
+        <div className='ms-1'>
+          <Info size={14} id='info-tooltip' />
+          <UncontrolledTooltip placement='top' target='info-tooltip'>
+            Allows a full access to the resource
+          </UncontrolledTooltip>
+        </div>
+      </div>
+    </>
+  )
+}
 
 export const RoleButtons = ({ onReset }) => (
   <Col className='text-center mt-2' xs={12}>

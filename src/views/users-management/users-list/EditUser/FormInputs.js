@@ -50,7 +50,6 @@ export const SelectBox = ({ label, options }) => {
   )
 }
 
-
 export const CheckBox = ({ label, keyName }) => {
   return (
     <Col xs={12}>
@@ -71,7 +70,6 @@ export const CheckBox = ({ label, keyName }) => {
     </Col>
   )
 }
-
 
 export const SubmitButton = ({ setShow }) => (
   <Col xs={12} className='text-center mt-2 pt-50'>

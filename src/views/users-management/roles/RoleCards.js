@@ -1,19 +1,8 @@
 import { Fragment, useState, useEffect } from 'react'
-import {
-  Row,
-  Col,
-  Label,
-  Input,
-  Table,
-  Modal,
-  ModalBody,
-  ModalHeader,
-  UncontrolledTooltip
-} from 'reactstrap'
-import { Info } from 'react-feather'
+import { Row, Col, Table, Modal, ModalBody, ModalHeader } from 'reactstrap'
 import { useForm } from 'react-hook-form'
 import axios from 'axios'
-import { CardItem, AddNewRoleItem, RoleAction, RoleButtons, RoleNameSearchInput } from './Components'
+import { CardItem, AddNewRoleItem, RoleAction, CRUDAccess, RoleButtons, RoleNameSearchInput } from './Components'
 
 const fetchRoles = async (setData, setRolesArr) => {
   const response = await axios.get('http://localhost:5000/api/access/roles')
@@ -85,23 +74,6 @@ const RoleCards = () => {
               <h4 className='mt-2 pt-50'>Role Permissions</h4>
               <Table className='table-flush-spacing' responsive>
                 <tbody>
-                  <tr>
-                    <td className='text-nowrap fw-bolder'>
-                      <span className='me-50'> Administrator Access</span>
-                      <Info size={14} id='info-tooltip' />
-                      <UncontrolledTooltip placement='top' target='info-tooltip'>
-                        Allows a full access to the system
-                      </UncontrolledTooltip>
-                    </td>
-                    <td>
-                      <div className='form-check'>
-                        <Input type='checkbox' id='select-all' />
-                        <Label className='form-check-label' for='select-all'>
-                          Select All
-                        </Label>
-                      </div>
-                    </td>
-                  </tr>
                   {rolesArr.map((role, index) => (<RoleNameItem key={index} role={role} />))}
                 </tbody>
               </Table>
@@ -126,14 +98,24 @@ const RoleCard = ({ data, setModalType, setShow }) => {
 }
 
 const RoleNameItem = ({ role }) => {
+  const [state, setState] = useState({
+    create: false,
+    read: false,
+    update: false,
+    delete: false,
+    crud: false
+  })
+
   return (
     <tr>
       <td className='text-nowrap fw-bolder'>{role}</td>
       <td>
         <div className='d-flex'>
-          <RoleAction label='Read' role={role} />
-          <RoleAction label='Write' role={role} />
-          <RoleAction label='Create' role={role} />
+          <RoleAction label='create' role={role} state={state} setState={setState} />
+          <RoleAction label='read' role={role} state={state} setState={setState} />
+          <RoleAction label='update' role={role} state={state} setState={setState} />
+          <RoleAction label='delete' role={role} state={state} setState={setState} />
+          <CRUDAccess state={state} setState={setState} />
         </div>
       </td>
     </tr>
