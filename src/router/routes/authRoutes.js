@@ -2,7 +2,7 @@ import { lazy } from 'react'
 
 const Home = lazy(() => import('../../views/Home'))
 const SecondPage = lazy(() => import('../../views/SecondPage'))
-const Login = lazy(() => import('../../views/Login'))
+const Login = lazy(() => import('../../views/login'))
 const Register = lazy(() => import('../../views/Register'))
 const ForgotPassword = lazy(() => import('../../views/ForgotPassword'))
 const NotAuthorized = lazy(() => import('../../views/NotAuthorized'))
