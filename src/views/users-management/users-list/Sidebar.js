@@ -1,21 +1,10 @@
-// ** React Import
 import { useState } from 'react'
-
-// ** Custom Components
 import Sidebar from '@components/sidebar'
-
-// ** Utils
 import { selectThemeColors } from '@utils'
-
-// ** Third Party Components
 import Select from 'react-select'
 import classnames from 'classnames'
 import { useForm, Controller } from 'react-hook-form'
-
-// ** Reactstrap Imports
 import { Button, Label, FormText, Form, Input } from 'reactstrap'
-
-// ** Store & Actions
 import { addUser } from '@store/user'
 import { useDispatch } from 'react-redux'
 
@@ -55,20 +44,15 @@ const countryOptions = [
   { label: 'United States', value: 'United States' }
 ]
 
-const checkIsValid = data => {
-  return Object.values(data).every(field => (typeof field === 'object' ? field !== null : field.length > 0))
-}
+const checkIsValid = data => Object.values(data).every(field => (typeof field === 'object' ? field !== null : field.length > 0))
 
 const SidebarNewUsers = ({ open, toggleSidebar }) => {
-  // ** States
   const [data, setData] = useState(null)
   const [plan, setPlan] = useState('basic')
   const [role, setRole] = useState('subscriber')
 
-  // ** Store Vars
   const dispatch = useDispatch()
 
-  // ** Vars
   const {
     control,
     setValue,
@@ -77,7 +61,6 @@ const SidebarNewUsers = ({ open, toggleSidebar }) => {
     formState: { errors }
   } = useForm({ defaultValues })
 
-  // ** Function to handle form submit
   const onSubmit = data => {
     setData(data)
     if (checkIsValid(data)) {
@@ -133,9 +116,7 @@ const SidebarNewUsers = ({ open, toggleSidebar }) => {
     >
       <Form onSubmit={handleSubmit(onSubmit)}>
         <div className='mb-1'>
-          <Label className='form-label' for='fullName'>
-            Full Name <span className='text-danger'>*</span>
-          </Label>
+          <Label className='form-label' for='fullName'>Full Name <span className='text-danger'>*</span></Label>
           <Controller
             name='fullName'
             control={control}
@@ -145,9 +126,7 @@ const SidebarNewUsers = ({ open, toggleSidebar }) => {
           />
         </div>
         <div className='mb-1'>
-          <Label className='form-label' for='username'>
-            Username <span className='text-danger'>*</span>
-          </Label>
+          <Label className='form-label' for='username'>Username <span className='text-danger'>*</span></Label>
           <Controller
             name='username'
             control={control}
@@ -157,9 +136,7 @@ const SidebarNewUsers = ({ open, toggleSidebar }) => {
           />
         </div>
         <div className='mb-1'>
-          <Label className='form-label' for='userEmail'>
-            Email <span className='text-danger'>*</span>
-          </Label>
+          <Label className='form-label' for='userEmail'>Email <span className='text-danger'>*</span></Label>
           <Controller
             name='email'
             control={control}
@@ -189,9 +166,7 @@ const SidebarNewUsers = ({ open, toggleSidebar }) => {
           />
         </div>
         <div className='mb-1'>
-          <Label className='form-label' for='company'>
-            Company <span className='text-danger'>*</span>
-          </Label>
+          <Label className='form-label' for='company'>Company <span className='text-danger'>*</span></Label>
           <Controller
             name='company'
             control={control}
@@ -201,8 +176,7 @@ const SidebarNewUsers = ({ open, toggleSidebar }) => {
           />
         </div>
         <div className='mb-1'>
-          <Label className='form-label' for='country'>
-            Country <span className='text-danger'>*</span>
+          <Label className='form-label' for='country'>Country <span className='text-danger'>*</span>
           </Label>
           <Controller
             name='country'
@@ -221,9 +195,7 @@ const SidebarNewUsers = ({ open, toggleSidebar }) => {
           />
         </div>
         <div className='mb-1'>
-          <Label className='form-label' for='user-role'>
-            User Role
-          </Label>
+          <Label className='form-label' for='user-role'>User Role</Label>
           <Input type='select' id='user-role' name='user-role' value={role} onChange={e => setRole(e.target.value)}>
             <option value='subscriber'>Subscriber</option>
             <option value='editor'>Editor</option>
@@ -233,9 +205,7 @@ const SidebarNewUsers = ({ open, toggleSidebar }) => {
           </Input>
         </div>
         <div className='mb-1' value={plan} onChange={e => setPlan(e.target.value)}>
-          <Label className='form-label' for='select-plan'>
-            Select Plan
-          </Label>
+          <Label className='form-label' for='select-plan'>Select Plan</Label>
           <Input type='select' id='select-plan' name='select-plan'>
             <option value='basic'>Basic</option>
             <option value='enterprise'>Enterprise</option>
@@ -243,12 +213,8 @@ const SidebarNewUsers = ({ open, toggleSidebar }) => {
             <option value='team'>Team</option>
           </Input>
         </div>
-        <Button type='submit' className='me-1' color='primary'>
-          Submit
-        </Button>
-        <Button type='reset' color='secondary' outline onClick={toggleSidebar}>
-          Cancel
-        </Button>
+        <Button type='submit' className='me-1' color='primary'>Submit</Button>
+        <Button type='reset' color='secondary' outline onClick={toggleSidebar}>Cancel</Button>
       </Form>
     </Sidebar>
   )

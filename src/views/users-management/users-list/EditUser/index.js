@@ -1,34 +1,18 @@
 import '@styles/react/libs/react-select/_react-select.scss'
-import { Fragment } from 'react'
 import { useForm } from 'react-hook-form'
-import { statusOptions, countryOptions, languageOptions, defaultValues } from './data'
 import { TextInput, TextInputValidation, SelectBox, CheckBox, SubmitButton } from './FormInputs'
 import { Row, Modal, ModalBody, ModalHeader } from 'reactstrap'
+import { statusOptions, countryOptions, languageOptions } from './data'
 
-const EditUser = ({ show, setShow }) => {
+const EditUser = ({ defaultValues, show, setShow }) => {
   const {
-    control,
-    setError,
-    handleSubmit,
-    formState: { errors }
+    handleSubmit
   } = useForm({ defaultValues })
 
-  const onSubmit = data => {
-    if (Object.values(data).every(field => field.length > 0)) {
-      return null
-    } else {
-      for (const key in data) {
-        if (data[key].length === 0) {
-          setError(key, {
-            type: 'manual'
-          })
-        }
-      }
-    }
-  }
+  const onSubmit = (payload) => console.log(payload, 'Payload...')
 
   return (
-    <Fragment>
+    <>
       <Modal isOpen={show} toggle={() => setShow(!show)} className='modal-dialog-centered modal-lg'>
         <ModalHeader className='bg-transparent' toggle={() => setShow(!show)}></ModalHeader>
         <ModalBody className='px-sm-5 mx-50 pb-5'>
@@ -37,9 +21,9 @@ const EditUser = ({ show, setShow }) => {
             <p>Updating user details will receive a privacy audit.</p>
           </div>
           <Row tag='form' className='gy-1 pt-75' onSubmit={handleSubmit(onSubmit)}>
-            <TextInputValidation control={control} errors={errors} label='FirstName' />
-            <TextInputValidation control={control} errors={errors} label='LastName' />
-            <TextInputValidation control={control} errors={errors} label='Username' />
+            <TextInputValidation defaultValues={defaultValues} label='fullName' />
+            <TextInputValidation defaultValues={defaultValues} label='username' />
+            <TextInputValidation defaultValues={defaultValues} label='company' />
             <TextInput label='Billing Email' keyName='email' defaultValue='example@domain.com' />
             <SelectBox placeholder='Status' options={statusOptions} />
             <TextInput label='Tax ID' keyName='tax-id' defaultValue='Tax-8894' />
@@ -51,7 +35,7 @@ const EditUser = ({ show, setShow }) => {
           </Row>
         </ModalBody>
       </Modal>
-    </Fragment>
+    </>
   )
 }
 

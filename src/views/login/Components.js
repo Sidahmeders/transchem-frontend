@@ -3,22 +3,9 @@ import { useSkin } from '@hooks/useSkin'
 import { Col, Button } from 'reactstrap'
 import { Facebook, Twitter, Mail, GitHub } from 'react-feather'
 
-export const LoginCover = () => {
-  const { skin } = useSkin()
-  const illustration = skin === 'dark' ? 'login-v2-dark.svg' : 'login-v2.svg',
-    source = require(`@src/assets/images/pages/${illustration}`).default
-
-  return (
-    <Col className='d-none d-lg-flex align-items-center p-5' lg='8' sm='12'>
-      <div className='w-100 d-lg-flex align-items-center justify-content-center px-5'>
-        <img className='img-fluid' src={source} alt='Login Cover' />
-      </div>
-    </Col>
-  )
-}
-
-export const Logo = () => (
-  <Link className='brand-logo' to='/' onClick={e => e.preventDefault()}>
+export const TrueVueSvgIcon = () => (
+  <>
+    <Link className='brand-logo' to='/' onClick={e => e.preventDefault()}>
     <svg viewBox='0 0 139 95' version='1.1' height='28'>
       <defs>
         <linearGradient x1='100%' y1='10.5120544%' x2='50%' y2='89.4879456%' id='linearGradient-1'>
@@ -30,6 +17,7 @@ export const Logo = () => (
           <stop stopColor='#FFFFFF' offset='100%'></stop>
         </linearGradient>
       </defs>
+    
       <g id='Page-1' stroke='none' strokeWidth='1' fill='none' fillRule='evenodd'>
         <g id='Artboard' transform='translate(-400.000000, -178.000000)'>
           <g id='Group' transform='translate(400.000000, 178.000000)'>
@@ -62,14 +50,43 @@ export const Logo = () => (
               fill='url(#linearGradient-2)'
               opacity='0.099999994'
               points='101.428699 0 83.0667527 94.1480575 130.378721 47.0740288'
-            ></polygon>
+              ></polygon>
           </g>
         </g>
       </g>
     </svg>
     <h2 className='brand-text text-primary ms-1'>TrueVue</h2>
-  </Link>
+    </Link>
+  </>
 )
+
+export const LoginCover = () => {
+  const { skin } = useSkin()
+  const illustration = skin === 'dark' ? 'login-v2-dark.svg' : 'login-v2.svg',
+    source = require(`@src/assets/images/pages/${illustration}`).default
+
+  return (
+    <Col className='d-none d-lg-flex align-items-center p-5' lg='8' sm='12'>
+      <div className='w-100 d-lg-flex align-items-center justify-content-center px-5'>
+        <img className='img-fluid' src={source} alt='Login Cover' />
+      </div>
+    </Col>
+  )
+}
+
+export const RegisterCover = () => {
+  const { skin } = useSkin()
+  const illustration = skin === 'dark' ? 'register-v2-dark.svg' : 'register-v2.svg',
+    source = require(`@src/assets/images/pages/${illustration}`).default
+
+  return (
+    <Col className='d-none d-lg-flex align-items-center p-5' lg='8' sm='12'>
+      <div className='w-100 d-lg-flex align-items-center justify-content-center px-5'>
+        <img className='img-fluid' src={source} alt='Login Cover' />
+      </div>
+    </Col>
+  )
+}
 
 export const CreateAccount = () => (
   <p className='text-center mt-2'>

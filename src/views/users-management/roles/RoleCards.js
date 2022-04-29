@@ -111,10 +111,10 @@ const RoleNameItem = ({ role }) => {
       <td className='text-nowrap fw-bolder'>{role}</td>
       <td>
         <div className='d-flex'>
-          <RoleAction label='create' role={role} state={state} setState={setState} />
-          <RoleAction label='read' role={role} state={state} setState={setState} />
-          <RoleAction label='update' role={role} state={state} setState={setState} />
-          <RoleAction label='delete' role={role} state={state} setState={setState} />
+          <RoleAction label='create' state={state} setState={setState} />
+          <RoleAction label='read' state={state} setState={setState} />
+          <RoleAction label='update' state={state} setState={setState} />
+          <RoleAction label='delete' state={state} setState={setState} />
           <CRUDAccess state={state} setState={setState} />
         </div>
       </td>

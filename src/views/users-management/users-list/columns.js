@@ -127,10 +127,14 @@ export const columns = [
     name: 'More Actions',
     minWidth: '150px',
     cell: (row) => {
+      const handleEditUserInfo = () => {
+        row.setUserInfo(() => row)
+        row.setShow(true)
+      }
       return (
         <div className='d-flex'>
           <span className='ms-2'></span>
-          <Edit size={15} onClick={() => row.setShow(true)} />
+          <Edit size={15} onClick={handleEditUserInfo} />
           <span className='ms-2'></span>
           <Trash2 size={15} />
         </div>

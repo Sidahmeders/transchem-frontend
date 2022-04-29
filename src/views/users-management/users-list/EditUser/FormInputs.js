@@ -1,7 +1,7 @@
 import { Col, Input, Label, FormFeedback, Button } from 'reactstrap'
 import Select from 'react-select'
 import { Check, X } from 'react-feather'
-import { Controller } from 'react-hook-form'
+import { Controller, useForm } from 'react-hook-form'
 import { selectThemeColors } from '@utils'
 
 export const TextInput = ({ label, keyName, defaultValue }) => (
@@ -11,27 +11,24 @@ export const TextInput = ({ label, keyName, defaultValue }) => (
   </Col>
 )
 
-export const TextInputValidation = ({ label, control, errors }) => (
-  <Col md={6} xs={12}>
-    <Label className='form-label' for={label}>{label}</Label>
-    <Controller
-      control={control}
-      name={label}
-      render={({ field }) => {
-        return (
-          <Input
-            {...field}
-            id={label}
-            label={label}
-            value={field.value}
-            invalid={errors[label] && true}
-          />
-        )
-      }}
-    />
-    {errors[label] && <FormFeedback>Please enter a valid {label}</FormFeedback>}
-  </Col>
-)
+export const TextInputValidation = ({ label, defaultValues }) => {
+  const {
+    control,
+    formState: { errors }
+  } = useForm({ defaultValues })
+
+  return (
+    <Col md={6} xs={12}>
+      <Label className='form-label' for={label}>{label}</Label>
+      <Controller
+        control={control}
+        name={label}
+        render={({ field }) => <Input {...field} id={label} label={label} value={field.value} invalid={errors[label] && true} />}
+      />
+      {errors[label] && <FormFeedback>Please enter a valid {label}</FormFeedback>}
+    </Col>
+  )
+}
 
 export const SelectBox = ({ label, options }) => {
   return (

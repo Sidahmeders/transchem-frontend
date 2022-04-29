@@ -66,23 +66,20 @@ export function AddNewRoleItem({ setModalType, setShow }) {
   )
 }
 
-export const RoleAction = ({ label, role, state, setState }) => {
+export const RoleAction = ({ label, state, setState }) => {
   const handleBoxCheck = () => setState(() => ({...state, [label]: !state[label]}))
-  return ( 
+  return (
     <div className='form-check me-3 me-lg-5'>
-      <Input onChange={handleBoxCheck} checked={state[label]} type='checkbox' id={`read-${role}`} />
-      <Label className='form-check-label' for={`read-${role}`}>{label}</Label>
+      <Input onChange={handleBoxCheck} checked={state[label]} type='checkbox' id={`read-${label}`} />
+      <Label className='form-check-label' for={`read-${label}`}>{label}</Label>
     </div>
   )
 }
 
 export const CRUDAccess = ({ state, setState }) => {
   const handleBoxCheck = () => {
-    if (state.crud) {
-      setState(() => ({...state, crud: false}))
-      return
-    }
-    const newState = Object.keys(state).reduce((prev, curr) => ({...prev, [curr]: true}), {})
+    const isCRUD = state.crud
+    const newState = Object.keys(state).reduce((prev, curr) => ({...prev, [curr]: !isCRUD }), {})
     setState(() => newState)
   }
 
