@@ -5,11 +5,12 @@ import EditRoleTable from './EditRoleTable'
 import CardItem from './CardItem'
 import axios from 'axios'
 
-const fetchRoles = async (setRoles) => {
+const fetchRoles = async (setRoles, setUserAccess) => {
   const response = await axios.get('http://localhost:5000/api/access/roles')
   if (response.status !== 200) return null
-  const { roles } = response.data
-  setRoles(() => roles)
+  const { userAccess, rolesList } = response.data
+  setRoles(() => rolesList)
+  setUserAccess(() => userAccess)
 }
 
 const RoleCards = () => {
@@ -17,8 +18,9 @@ const RoleCards = () => {
   const [modalType, setModalType] = useState('Add New')
   const [roles, setRoles] = useState([])
   const [selectedRole, setSelectedRole] = useState({})
+  const [userAccess, setUserAccess] = useState({})
 
-  useEffect(() => fetchRoles(setRoles), [])
+  useEffect(() => fetchRoles(setRoles, setUserAccess), [])
 
   return (
     <Fragment>
@@ -40,7 +42,12 @@ const RoleCards = () => {
           modalType={modalType}
           setModalType={setModalType}
         />
-        <AddNewRoleItem setModalType={setModalType} setShow={setShow} />
+        <AddNewRoleItem 
+          setShow={setShow}
+          setModalType={setModalType}
+          userAccess={userAccess}
+          setSelectedRole={setSelectedRole}
+        />
       </Row>
     </Fragment>
   )

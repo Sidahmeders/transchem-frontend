@@ -7,13 +7,18 @@ export default function EditRoleTable ({ role, show, setShow, modalType, setModa
   const {
     reset,
     control,
+    setError,
     setValue,
+    handleSubmit,
     formState: { errors }
   } = useForm({ defaultValues: { roleType: '' } })
 
-  const onSubmit = (event) => {
-    event.preventDefault()
-    console.log(event.target)
+  const onSubmit = (data) => {
+    if (data?.roleName?.length) {
+      setShow(false)
+    } else {
+      setError('roleName', { type: 'manual' })
+    }
   }
 
   const onReset = () => {
@@ -36,10 +41,11 @@ export default function EditRoleTable ({ role, show, setShow, modalType, setModa
       <ModalHeader className='bg-transparent' toggle={() => setShow(!show)}></ModalHeader>
       <ModalBody className='px-5 pb-5'>
         <div className='text-center mb-4'>
-          <h1>{modalType} <span style={{color:'#7367f0'}}>{role.name}</span> Role</h1>
+          <h1>{modalType} Role</h1>
+          <h5>current role: <span style={{color:'#7367f0'}}>{role.name}</span></h5>
           <p>Set role permissions</p>
         </div>
-        <Row tag='form' onSubmit={onSubmit}>
+        <Row tag='form' onSubmit={handleSubmit(onSubmit)}>
           <RoleNameSearchInput control={control} errors={errors} />
           <Col xs={12}>
             <h4 className='mt-2 pt-50'>Role Permissions</h4>

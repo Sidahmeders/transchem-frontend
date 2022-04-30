@@ -3,10 +3,11 @@ import illustration from '@src/assets/images/illustration/faq-illustrations.svg'
 import { Info } from 'react-feather'
 import { Controller } from 'react-hook-form'
 
-export function AddNewRoleItem({ setModalType, setShow }) {
+export function AddNewRoleItem({ userAccess, setSelectedRole, setModalType, setShow }) {
   const addNewRole = () => {
     setModalType('Add New')
     setShow(true)
+    setSelectedRole(() => userAccess)
   }
 
   return (
@@ -92,7 +93,14 @@ export const RoleNameSearchInput = ({ control, errors }) => (
       name='roleName'
       control={control}
       render={({ field }) => (
-        <Input {...field} id='roleName' placeholder='Enter role name' invalid={errors.roleName && true} />
+        <Input
+          {...field}
+          id='roleName'
+          placeholder='Enter role name'
+          label='roleName' 
+          value={field.value}
+          invalid={errors.roleName && true} 
+        />
       )}
     />
     {errors.roleName && <FormFeedback>Please enter a valid role name</FormFeedback>}
