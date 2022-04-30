@@ -30,17 +30,25 @@ export function AddNewRoleItem({ setModalType, setShow }) {
   )
 }
 
-export const RoleAction = ({ label, state, setState }) => {
+export const RoleAction = ({ label, canAssign, state, setState }) => {
   const handleBoxCheck = () => setState(() => ({...state, [label]: !state[label]}))
   return (
     <div className='form-check me-3 me-lg-5'>
-      <Input onChange={handleBoxCheck} checked={state[label]} type='checkbox' id={`read-${label}`} />
+      <Input 
+        id={`read-${label}`}
+        type='checkbox'
+        disabled={canAssign}
+        onChange={handleBoxCheck} 
+        checked={state[label]}
+      /> 
       <Label className='form-check-label' for={`read-${label}`}>{label}</Label>
     </div>
   )
 }
 
-export const CRUDAccess = ({ state, setState }) => {
+export const CRUDAccess = ({ actions, state, setState }) => {
+  const canAssign = !Object.values(actions).reduce((prev, curr) => (prev && curr), true)
+  
   const handleBoxCheck = () => {
     const newState = Object.keys(state).reduce((prev, curr) => ({...prev, [curr]: !Boolean(state.crud) }), {})
     setState(() => newState)
@@ -50,7 +58,13 @@ export const CRUDAccess = ({ state, setState }) => {
     <>
       <div className='d-flex flex-row form-check me-3 me-lg-5'>
         <div>
-          <Input onChange={handleBoxCheck} checked={state.crud} type='checkbox' id='select-all' />
+          <Input
+            id='select-all'
+            type='checkbox'
+            disabled={canAssign}
+            onChange={handleBoxCheck} 
+            checked={state.crud}
+          />
           <Label className='d-flex flex-row form-check-label' for='select-all'>CRUD</Label>
         </div>
         <div className='ms-1'>

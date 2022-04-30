@@ -71,8 +71,16 @@ const RoleNameItem = ({ resource }) => {
       <td className='text-nowrap fw-bolder'>{resource.name}</td>
       <td>
         <div className='d-flex'>
-          {Object.keys(resource.actions).map((action, index) => (<RoleAction key={index} label={action} state={state} setState={setState} />))}
-          <CRUDAccess state={state} setState={setState} />
+          {Object.keys(resource.actions).map((action, index) => (
+            <RoleAction
+              key={index}
+              canAssign={!resource.actions[action]}
+              label={action}
+              state={state}
+              setState={setState} 
+            />
+          ))}
+          <CRUDAccess actions={resource.actions} state={state} setState={setState} />
         </div>
       </td>
     </tr>
