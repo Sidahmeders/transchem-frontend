@@ -23,7 +23,15 @@ export const TextInputValidation = ({ label, defaultValues }) => {
       <Controller
         control={control}
         name={label}
-        render={({ field }) => <Input {...field} id={label} label={label} value={field.value} invalid={errors[label] && true} />}
+        render={({ field }) => (
+          <Input 
+            {...field} 
+            id={label} 
+            label={label} 
+            value={field.value} 
+            invalid={errors[label] && true} 
+          />
+        )}
       />
       {errors[label] && <FormFeedback>Please enter a valid {label}</FormFeedback>}
     </Col>

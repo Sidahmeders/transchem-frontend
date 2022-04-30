@@ -1,15 +1,14 @@
 import '@styles/react/libs/react-select/_react-select.scss'
-import { useForm } from 'react-hook-form'
 import { TextInput, TextInputValidation, SelectBox, CheckBox, SubmitButton } from './FormInputs'
 import { Row, Modal, ModalBody, ModalHeader } from 'reactstrap'
 import { statusOptions, countryOptions, languageOptions } from './data'
 
 const EditUser = ({ defaultValues, show, setShow }) => {
-  const {
-    handleSubmit
-  } = useForm({ defaultValues })
-
-  const onSubmit = (payload) => console.log(payload, 'Payload...')
+  const onSubmit = (event) => {
+    event.preventDefault()
+    // TODO: Handle getting the form data
+    console.log(event.target, 'Payload...')
+  }
 
   return (
     <>
@@ -20,7 +19,7 @@ const EditUser = ({ defaultValues, show, setShow }) => {
             <h1 className='mb-1'>Edit User Information</h1>
             <p>Updating user details will receive a privacy audit.</p>
           </div>
-          <Row tag='form' className='gy-1 pt-75' onSubmit={handleSubmit(onSubmit)}>
+          <Row tag='form' className='gy-1 pt-75' onSubmit={onSubmit}>
             <TextInputValidation defaultValues={defaultValues} label='fullName' />
             <TextInputValidation defaultValues={defaultValues} label='username' />
             <TextInputValidation defaultValues={defaultValues} label='company' />

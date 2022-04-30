@@ -1,124 +1,84 @@
+import { Link } from 'react-router-dom'
 import { Fragment, useState, useEffect } from 'react'
-import { Row, Col, Table, Modal, ModalBody, ModalHeader } from 'reactstrap'
-import { useForm } from 'react-hook-form'
+import { Row, Col, Card, CardBody } from 'reactstrap'
+import { Copy } from 'react-feather'
+import AvatarGroup from '@components/avatar-group'
+import { AddNewRoleItem } from './Components'
+import EditRoleTable from './EditRoleTable'
 import axios from 'axios'
-import { CardItem, AddNewRoleItem, RoleAction, CRUDAccess, RoleButtons, RoleNameSearchInput } from './Components'
 
-const fetchRoles = async (setData, setRolesArr) => {
+const fetchRoles = async (setRoles) => {
   const response = await axios.get('http://localhost:5000/api/access/roles')
   if (response.status !== 200) return null
-  const { data, rolesArr } = response.data
-  setData(() => data)
-  setRolesArr(() => rolesArr)
+  const { roles } = response.data
+  setRoles(() => roles)
 }
 
 const RoleCards = () => {
-  // ** States
   const [show, setShow] = useState(false)
   const [modalType, setModalType] = useState('Add New')
-  const [data, setData] = useState([])
-  const [rolesArr, setRolesArr] = useState([])
+  const [roles, setRoles] = useState([])
 
-  // ** Hooks
-  const {
-    reset,
-    control,
-    setError,
-    setValue,
-    handleSubmit,
-    formState: { errors }
-  } = useForm({ defaultValues: { roleName: '' } })
-
-  const onSubmit = data => {
-    if (data.roleName.length) {
-      setShow(false)
-    } else {
-      setError('roleName', {
-        type: 'manual'
-      })
-    }
-  }
-
-  const onReset = () => {
-    setShow(false)
-    reset({ roleName: '' })
-  }
-
-  const handleModalClosed = () => {
-    setModalType('Add New')
-    setValue('roleName')
-  }
-
-  useEffect(() => {
-    fetchRoles(setData, setRolesArr)
-  }, [])
+  useEffect(() => fetchRoles(setRoles), [])
 
   return (
     <Fragment>
-      <RoleCard data={data} setModalType={setModalType} setShow={setShow} />
-      <Modal
-        isOpen={show}
-        onClosed={handleModalClosed}
-        toggle={() => setShow(!show)}
-        className='modal-dialog-centered modal-lg'
-      >
-        <ModalHeader className='bg-transparent' toggle={() => setShow(!show)}></ModalHeader>
-        <ModalBody className='px-5 pb-5'>
-          <div className='text-center mb-4'>
-            <h1>{modalType} Role</h1>
-            <p>Set role permissions</p>
-          </div>
-          <Row tag='form' onSubmit={handleSubmit(onSubmit)}>
-            <RoleNameSearchInput control={control} errors={errors} />
-            <Col xs={12}>
-              <h4 className='mt-2 pt-50'>Role Permissions</h4>
-              <Table className='table-flush-spacing' responsive>
-                <tbody>
-                  {rolesArr.map((role, index) => (<RoleNameItem key={index} role={role} />))}
-                </tbody>
-              </Table>
-            </Col>
-            <RoleButtons onReset={onReset} />
-          </Row>
-        </ModalBody>
-      </Modal>
+      <Row>
+        {roles.map((role, index) => (
+          <CardItem
+            key={index}
+            role={role}
+            modalType={modalType}
+            setModalType={setModalType}
+            show={show}
+            setShow={setShow}
+          />
+        ))}
+        <AddNewRoleItem setModalType={setModalType} setShow={setShow} />
+      </Row>
     </Fragment>
   )
 }
 
-const RoleCard = ({ data, setModalType, setShow }) => {
-  return (
-    <Row>
-      {data.map((item, index) => (
-        <CardItem key={index} item={item} setModalType={setModalType} setShow={setShow} /> 
-      ))}
-      <AddNewRoleItem setModalType={setModalType} setShow={setShow} />
-    </Row>
-  )
-}
 
-const RoleNameItem = ({ role }) => {
-  const [state, setState] = useState({
-    create: false,
-    read: false,
-    update: false,
-    delete: false,
-    crud: false
-  })
+function CardItem({ role, modalType, setModalType, show, setShow }) {
+  const showRoleEdit = (event) => {
+    event.preventDefault()
+    setModalType('Edit')
+    setShow(true)
+  }
 
   return (
-    <tr>
-      <td className='text-nowrap fw-bolder'>{role}</td>
-      <td>
-        <div className='d-flex'>
-          <RoleAction label='create' state={state} setState={setState} />
-          <RoleAction label='read' state={state} setState={setState} />
-          <RoleAction label='update' state={state} setState={setState} />
-          <RoleAction label='delete' state={state} setState={setState} />
-          <CRUDAccess state={state} setState={setState} />
-        </div>
-      </td>
-    </tr>
+    <>
+      <EditRoleTable
+        permissions={role.permissions}
+        show={show}
+        setShow={setShow}
+        modalType={modalType}
+        setModalType={setModalType}
+      />
+      <Col xl={4} md={6}>
+        <Card>
+          <CardBody>
+            <div className='d-flex justify-content-between'>
+              <span>{`Total ${role.assigned_users} users`}</span>
+              <AvatarGroup data={role.imagesURL.map((image) => ({img: image, size: 'sm'}))} />
+            </div>
+            <div className='d-flex justify-content-between align-items-end mt-1 pt-25'>
+              <div className='role-heading'>
+                <h4 className='fw-bolder'>{role.name}</h4>
+                <Link to='/' className='role-edit-modal' onClick={showRoleEdit}>
+                  <small className='fw-bolder'>Edit Role</small>
+                </Link>
+              </div>
+              <Link to='' className='text-body' onClick={e => e.preventDefault()}>
+                <Copy className='font-medium-5' />
+              </Link>
+            </div>
+          </CardBody>
+        </Card>
+      </Col>
+    </>
   )
 }
 
