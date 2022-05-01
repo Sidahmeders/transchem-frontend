@@ -2,33 +2,78 @@ import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { Row, Col, Table, Modal, ModalBody, ModalHeader } from 'reactstrap'
 import { RoleAction, CRUDAccess, RoleButtons, RoleNameSearchInput } from './Components'
+import { yupResolver } from '@hookform/resolvers/yup'
+import * as yup from "yup"
+import axios from 'axios'
 
-export default function EditRoleTable ({ role, show, setShow, modalType, setModalType }) {
+const extractUserPermissions = () => {
+  const tableRowCollection = document.getElementById('editable-roles-form').getElementsByTagName('tr')
+  
+  const permissionsList = []
+  Array.from(tableRowCollection).forEach((rowElement) => {
+    const resourceElement = rowElement.childNodes[1].childNodes[0]
+    const resourceName = resourceElement.dataset.resource
+    
+    const resourceActions = {}
+    resourceElement.childNodes.forEach((actionNode) => {
+      const actionElement = actionNode.childNodes[0]
+      const actionName = actionElement.dataset.action
+      const canAssignAction = actionElement.checked
+      resourceActions[actionName] = canAssignAction
+    })
+
+    permissionsList.push({ name: resourceName, actions: resourceActions })
+  })
+
+  return permissionsList
+}
+
+const schema = yup.object({
+  roleName: yup.string().min(5).max(20).required()
+}).required()
+
+export default function EditRoleTable ({ role, addNewRole, show, setShow, modalType, setModalType }) {
   const {
     reset,
     control,
     setError,
-    setValue,
     handleSubmit,
     formState: { errors }
-  } = useForm({ defaultValues: { roleType: '' } })
-
-  const onSubmit = (data) => {
-    if (data?.roleName?.length) {
-      setShow(false)
-    } else {
-      setError('roleName', { type: 'manual' })
-    }
-  }
+  } = useForm({ defaultValues: { roleName: '' }, resolver: yupResolver(schema)})
 
   const onReset = () => {
     setShow(false)
-    reset({ roleType: '' })
+    reset({ roleName: '' })
   }
 
+  const submitNewRole = async (data) => {
+    if (!data?.roleName) {
+      setError('roleName', { type: 'manual' })
+      return
+    }
+    const permissionsList = extractUserPermissions()
+    const payload = {
+      createdByUser: '#1234567',
+      createdByRole: role.name,
+      name: data.roleName,
+      permissions: permissionsList
+    }
+    const response = await axios.post('http://localhost:5000/api/access/roles', payload)
+    if (response.status !== 200) return // TODO: Display the Errors
+    
+    addNewRole(response.data)
+    onReset()
+    setShow(false) 
+  }
+
+  const submitRoleEdit = (event) => {
+    event.preventDefault()
+    const permissionsList = extractUserPermissions()
+    console.log(modalType, permissionsList)
+  }
+  
   const handleModalClosed = () => {
     setModalType('Add New')
-    setValue('roleType')
   }
 
   return (
@@ -45,8 +90,8 @@ export default function EditRoleTable ({ role, show, setShow, modalType, setModa
           <h5>current role: <span style={{color:'#7367f0'}}>{role.name}</span></h5>
           <p>Set role permissions</p>
         </div>
-        <Row tag='form' onSubmit={handleSubmit(onSubmit)}>
-          <RoleNameSearchInput control={control} errors={errors} />
+        <Row id='editable-roles-form' tag='form' onSubmit={modalType === 'Add New' ? handleSubmit(submitNewRole) : submitRoleEdit }>
+          { modalType === 'Add New' ? <RoleNameSearchInput control={control} errors={errors} /> : null }
           <Col xs={12}>
             <h4 className='mt-2 pt-50'>Role Permissions</h4>
             <Table className='table-flush-spacing' responsive>
@@ -68,12 +113,13 @@ const RoleNameItem = ({ resource }) => {
     <tr>
       <td className='text-nowrap fw-bolder'>{resource.name}</td>
       <td>
-        <div className='d-flex'>
+        <div data-resource={resource.name} className='d-flex'>
           {Object.keys(resource.actions).map((action, index) => (
             <RoleAction
               key={index}
               canAssign={!resource.actions[action]}
               label={action}
+              name={resource.name}
               state={state}
               setState={setState} 
             />

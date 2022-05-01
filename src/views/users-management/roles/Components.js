@@ -31,18 +31,19 @@ export function AddNewRoleItem({ userAccess, setSelectedRole, setModalType, setS
   )
 }
 
-export const RoleAction = ({ label, canAssign, state, setState }) => {
+export const RoleAction = ({ label, name, canAssign, state, setState }) => {
   const handleBoxCheck = () => setState(() => ({...state, [label]: !state[label]}))
   return (
     <div className='form-check me-3 me-lg-5'>
       <Input 
-        id={`read-${label}`}
+        data-action={label}
+        id={`${name}-${label}`}
         type='checkbox'
         disabled={canAssign}
         onChange={handleBoxCheck} 
         checked={state[label]}
-      /> 
-      <Label className='form-check-label' for={`read-${label}`}>{label}</Label>
+      />
+      <Label className='form-check-label' for={`${name}-${label}`}>{label}</Label>
     </div>
   )
 }
