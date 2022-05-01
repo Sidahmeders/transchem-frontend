@@ -21,6 +21,10 @@ const RoleCards = () => {
   const [userAccess, setUserAccess] = useState({})
 
   const addNewRole = (newRole) => setRoles(() => ([...roles, newRole]))
+  const updateRoles = (updatedRole) => {
+    roles.forEach((role) => (role.id === updatedRole.id ? Object.assign(role, updatedRole) : null))
+    setRoles(() => roles)
+  }
 
   useEffect(() => fetchRoles(setRoles, setUserAccess), [])
 
@@ -40,6 +44,7 @@ const RoleCards = () => {
         <EditRoleTable
           role={selectedRole}
           addNewRole={addNewRole}
+          updateRoles={updateRoles}
           show={show}
           setShow={setShow}
           modalType={modalType}

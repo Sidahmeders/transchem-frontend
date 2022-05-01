@@ -32,7 +32,7 @@ const schema = yup.object({
   roleName: yup.string().min(5).max(20).required()
 }).required()
 
-export default function EditRoleTable ({ role, addNewRole, show, setShow, modalType, setModalType }) {
+export default function EditRoleTable ({ role, addNewRole, updateRoles, show, setShow, modalType, setModalType }) {
   const {
     reset,
     control,
@@ -46,18 +46,24 @@ export default function EditRoleTable ({ role, addNewRole, show, setShow, modalT
     reset({ roleName: '' })
   }
 
+  const buildUserRequest = () => {
+    const permissionsList = extractUserPermissions()
+    const payload = {
+      id: role.id,
+      createdByUser: '#1234567',
+      createdByRole: role.createdByRole,
+      name: role.name,
+      permissions: permissionsList
+    }
+    return payload
+  }
+
   const submitNewRole = async (data) => {
     if (!data?.roleName) {
       setError('roleName', { type: 'manual' })
       return
     }
-    const permissionsList = extractUserPermissions()
-    const payload = {
-      createdByUser: '#1234567',
-      createdByRole: role.name,
-      name: data.roleName,
-      permissions: permissionsList
-    }
+    const payload = buildUserRequest()
     const response = await axios.post('http://localhost:5000/api/access/roles', payload)
     if (response.status !== 200) return // TODO: Display the Errors
     
@@ -66,10 +72,14 @@ export default function EditRoleTable ({ role, addNewRole, show, setShow, modalT
     setShow(false) 
   }
 
-  const submitRoleEdit = (event) => {
+  const submitRoleEdit = async (event) => {
     event.preventDefault()
-    const permissionsList = extractUserPermissions()
-    console.log(modalType, permissionsList)
+    const payload = buildUserRequest()
+    const response = await axios.put('http://localhost:5000/api/access/roles', payload)
+    if (response.status !== 200) return // TODO: Display the Errors
+    
+    updateRoles(response.data)
+    setShow(false)
   }
   
   const handleModalClosed = () => {
