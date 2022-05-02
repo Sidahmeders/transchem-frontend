@@ -7,7 +7,7 @@ export function AddNewRoleItem({ userAccess, setSelectedRole, setModalType, setS
   const addNewRole = () => {
     setModalType('Add New')
     setShow(true)
-    setSelectedRole(() => userAccess)
+    setSelectedRole(userAccess)
   }
 
   return (

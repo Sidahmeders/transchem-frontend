@@ -8,7 +8,7 @@ export default function CardItem({ setSelectedRole, role, setModalType, setShow 
     event.preventDefault()
     setModalType('Edit')
     setShow(true)
-    setSelectedRole(() => role)
+    setSelectedRole(role)
   }
 
   return (

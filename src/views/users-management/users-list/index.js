@@ -8,7 +8,7 @@ import { ChevronDown } from 'react-feather'
 import { Card } from 'reactstrap'
 import { getAllData, getData } from '@store/user'
 import { columns, ExpandableTable } from './columns'
-import Sidebar from './Sidebar'
+import AddUserSidebar from './addUser'
 import CustomHeader from './CustomHeader'
 import CustomPagination from './CustomPagination'
 import EditUser from './EditUser'
@@ -154,7 +154,7 @@ const UsersList = () => {
           />
         </div>
       </Card>
-      <Sidebar open={sidebarOpen} toggleSidebar={toggleSidebar} />
+      <AddUserSidebar open={sidebarOpen} toggleSidebar={toggleSidebar} />
     </div>
   )
 }

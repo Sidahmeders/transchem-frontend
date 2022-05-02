@@ -1,37 +1,23 @@
-import { Fragment, useState, useEffect } from 'react'
+import { Fragment, useState, useEffect, useContext } from 'react'
 import { Row } from 'reactstrap'
 import { AddNewRoleItem } from './Components'
 import EditRoleTable from './EditRoleTable'
 import CardItem from './CardItem'
-import axios from 'axios'
-
-const fetchRoles = async (setRoles, setUserAccess) => {
-  const response = await axios.get('http://localhost:5000/api/access/roles')
-  if (response.status !== 200) return null
-  const { userAccess, rolesList } = response.data
-  setRoles(() => rolesList)
-  setUserAccess(() => userAccess)
-}
+import { ContextConsumer } from '@context'
 
 const RoleCards = () => {
+  const { usersManagement, roles } = useContext(ContextConsumer)
+  const { fetchRoles, addNewRole, updateRoles, setSelectedRole } = usersManagement
+    
   const [show, setShow] = useState(false)
   const [modalType, setModalType] = useState('Add New')
-  const [roles, setRoles] = useState([])
-  const [selectedRole, setSelectedRole] = useState({})
-  const [userAccess, setUserAccess] = useState({})
 
-  const addNewRole = (newRole) => setRoles(() => ([...roles, newRole]))
-  const updateRoles = (updatedRole) => {
-    roles.forEach((role) => (role.id === updatedRole.id ? Object.assign(role, updatedRole) : null))
-    setRoles(() => roles)
-  }
-
-  useEffect(() => fetchRoles(setRoles, setUserAccess), [])
+  useEffect(() => fetchRoles(), [])
 
   return (
     <Fragment>
       <Row>
-        {roles.map((role, index) => (
+        {roles.all.map((role, index) => (
           <Fragment key={index}>
             <CardItem
               role={role}
@@ -42,7 +28,7 @@ const RoleCards = () => {
           </Fragment>
         ))}
         <EditRoleTable
-          role={selectedRole}
+          role={roles.selected}
           addNewRole={addNewRole}
           updateRoles={updateRoles}
           show={show}
@@ -50,10 +36,10 @@ const RoleCards = () => {
           modalType={modalType}
           setModalType={setModalType}
         />
-        <AddNewRoleItem 
+        <AddNewRoleItem
           setShow={setShow}
           setModalType={setModalType}
-          userAccess={userAccess}
+          userAccess={roles.userAccess}
           setSelectedRole={setSelectedRole}
         />
       </Row>

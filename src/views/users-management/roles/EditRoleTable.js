@@ -46,13 +46,13 @@ export default function EditRoleTable ({ role, addNewRole, updateRoles, show, se
     reset({ roleName: '' })
   }
 
-  const buildUserRequest = () => {
+  const buildUserRequest = (roleName) => {
     const permissionsList = extractUserPermissions()
     const payload = {
       id: role.id,
       createdByUser: '#1234567',
-      createdByRole: role.createdByRole,
-      name: role.name,
+      createdByRole: role.name,
+      name: roleName || role.name,
       permissions: permissionsList
     }
     return payload
@@ -63,7 +63,7 @@ export default function EditRoleTable ({ role, addNewRole, updateRoles, show, se
       setError('roleName', { type: 'manual' })
       return
     }
-    const payload = buildUserRequest()
+    const payload = buildUserRequest(data.roleName)
     const response = await axios.post('http://localhost:5000/api/access/roles', payload)
     if (response.status !== 200) return // TODO: Display the Errors
     

@@ -6,13 +6,14 @@ import { BrowserRouter } from 'react-router-dom'
 // ** Redux Imports
 import { store } from './redux/store'
 import { Provider } from 'react-redux'
+// ** React Context
+import { ContextProvider } from '@context'
 
 // ** Intl, CASL & ThemeColors Context
 import ability from './configs/acl/ability'
 import { AbilityContext } from './utility/context/Can'
 import { ThemeContext } from './utility/context/ThemeColors'
 
-// ** ThemeConfig
 import themeConfig from './configs/themeConfig'
 
 // ** Toast
@@ -54,6 +55,7 @@ const LazyApp = lazy(() => import('./App'))
 ReactDOM.render(
   <BrowserRouter>
     <Provider store={store}>
+    <ContextProvider>
       <Suspense fallback={<Spinner />}>
         <AbilityContext.Provider value={ability}>
           <ThemeContext>
@@ -62,6 +64,7 @@ ReactDOM.render(
           </ThemeContext>
         </AbilityContext.Provider>
       </Suspense>
+    </ContextProvider>
     </Provider>
   </BrowserRouter>,
   document.getElementById('root')
