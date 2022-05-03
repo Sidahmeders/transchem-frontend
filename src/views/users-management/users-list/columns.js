@@ -9,7 +9,7 @@ import { Badge } from 'reactstrap'
 
 // ** Renders Client Columns
 const renderClient = row => {
-  if (row.avatar.length) {
+  if (row?.avatar?.length) {
     return <Avatar className='me-1' img={row.avatar} width='32' height='32' />
   } else {
     return (
@@ -48,27 +48,26 @@ const renderRole = row => {
     }
   }
 
-  const Icon = roleObj[row.role] ? roleObj[row.role].icon : Edit2
+  const Icon = roleObj[row.roleName] ? roleObj[row.roleName].icon : Edit2
 
   return (
     <span className='text-truncate text-capitalize align-middle'>
-      <Icon size={18} className={`${roleObj[row.role] ? roleObj[row.role].class : ''} me-50`} />
-      {row.role}
+      <Icon size={18} className={`${roleObj[row.roleName] ? roleObj[row.roleName].class : ''} me-50`} />
+      {row.roleName}
     </span>
   )
 }
 
-const statusObj = {
-  pending: 'light-warning',
-  active: 'light-success',
-  inactive: 'light-secondary'
+const isVerifiedObj = {
+  false: 'light-warning',
+  true: 'light-success'
 }
 
 export const columns = [
   {
-    name: 'User',
+    name: 'fullName',
     sortable: true,
-    minWidth: '300px',
+    minWidth: '275px',
     sortField: 'fullName',
     selector: row => row.fullName,
     cell: row => (
@@ -90,36 +89,28 @@ export const columns = [
   {
     name: 'Role',
     sortable: true,
-    minWidth: '172px',
-    sortField: 'role',
-    selector: row => row.role,
+    minWidth: '170px',
+    sortField: 'roleName',
+    selector: row => row.roleName,
     cell: row => renderRole(row)
   },
   {
-    name: 'Plan',
-    minWidth: '138px',
+    name: 'Phone',
+    minWidth: '200px',
     sortable: true,
-    sortField: 'currentPlan',
-    selector: row => row.currentPlan,
-    cell: row => <span className='text-capitalize'>{row.currentPlan}</span>
-  },
-  {
-    name: 'Billing',
-    minWidth: '230px',
-    sortable: true,
-    sortField: 'billing',
-    selector: row => row.billing,
-    cell: row => <span className='text-capitalize'>{row.billing}</span>
+    sortField: 'phone',
+    selector: row => row.phone,
+    cell: row => <span className='text-capitalize'>{row.phone}</span>
   },
   {
     name: 'Status',
-    minWidth: '138px',
+    minWidth: '130px',
     sortable: true,
-    sortField: 'status',
-    selector: row => row.status,
+    sortField: 'isVerified',
+    selector: row => row.isVerified,
     cell: row => (
-      <Badge className='text-capitalize' color={statusObj[row.status]} pill>
-        {row.status}
+      <Badge className='text-capitalize' color={isVerifiedObj[row.isVerified]} pill>
+        {row.isVerified ? 'verified' : 'unauthorized'}
       </Badge>
     )
   },
@@ -148,10 +139,10 @@ export const ExpandableTable = ({ data }) => {
   return (
     <div className='expandable-content p-2'>
       <p>
-        <span style={{color:'#15d'}} className='fw-bold'>Company:</span> {data.company}
+        <span style={{color:'#15d'}} className='fw-bold'>FullName:</span> {data.fullName}
       </p>
       <p>
-        <span style={{color:'#15d'}} className='fw-bold'>fullName:</span> {data.fullName}
+        <span style={{color:'#15d'}} className='fw-bold'>Country:</span> {data.country}
       </p>
       <p className='m-0'>
         <span style={{color:'#15d'}} className='fw-bold'>Email:</span> {data.email}

@@ -8,7 +8,7 @@ import { ContextConsumer } from '@context'
 const RoleCards = () => {
   const { usersManagement, roles } = useContext(ContextConsumer)
   const { fetchRoles, addNewRole, updateRoles, setSelectedRole } = usersManagement
-    
+  
   const [show, setShow] = useState(false)
   const [modalType, setModalType] = useState('Add New')
 

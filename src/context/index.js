@@ -10,8 +10,9 @@ function ContextProvider(props) {
         selected: {},
         userAccess: {}
     })
+    const [usersData, setUsersData] = useState([])
 
-    const usersManagement = buildUsersManagement({ roles, setRoles })
+    const usersManagement = buildUsersManagement({ roles, setRoles, usersData, setUsersData })
     
     // other modules...
 
@@ -21,7 +22,7 @@ function ContextProvider(props) {
         <Context.Provider
             value={{
                 roles,
-                setRoles,
+                usersData,
                 usersManagement,
                 randomFunction
             }}>

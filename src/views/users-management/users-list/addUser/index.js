@@ -5,21 +5,24 @@ import Select from 'react-select'
 import classnames from 'classnames'
 import { useForm, Controller } from 'react-hook-form'
 import { Button, Label, FormText, Form, Input } from 'reactstrap'
-import { addUser } from '@store/user'
-import { useDispatch } from 'react-redux'
-import { defaultValues, countryOptions } from './data'
 import { ContextConsumer } from '@context'
 
 const checkIsValid = data => Object.values(data).every(field => (typeof field === 'object' ? field !== null : field.length > 0))
 
+const getRoleOptions = (roles) => roles.map((role) => ({ id: role.id, label: role.name }))
+
+const defaultValues = {
+  fullName: '',
+  email: '',
+  phone: '',
+  role: null
+}
+
 const AddUser = ({ open, toggleSidebar }) => {
-  const { randomFunction } = useContext(ContextConsumer)
-  randomFunction()
-
-  const [data, setData] = useState(null)
-  const [role, setRole] = useState('subscriber')
-
-  const dispatch = useDispatch()
+  const { roles, usersManagement } = useContext(ContextConsumer)
+  const { postNewUser } = usersManagement
+  const roleOptions = getRoleOptions(roles.all)
+  const [userData, setUserData] = useState(null)
 
   const {
     control,
@@ -29,31 +32,26 @@ const AddUser = ({ open, toggleSidebar }) => {
     formState: { errors }
   } = useForm({ defaultValues })
 
-  const onSubmit = data => {
-    setData(data)
+  const onSubmit = async (data) => {
+    setUserData(data)
+
     if (checkIsValid(data)) {
+      const newUser = await postNewUser(data)
+      if (newUser === null) return // TODO: Display the Errors
       toggleSidebar()
-      dispatch(
-        addUser({
-          fullName: data.fullName,
-          avatar: '',
-          email: data.email,
-          role: data.role.value,
-          role
+      return
+    }
+
+    for (const key in data) {
+      if (data[key] === null) {
+        setError('role', {
+          type: 'manual'
         })
-      )
-    } else {
-      for (const key in data) {
-        if (data[key] === null) {
-          setError('role', {
-            type: 'manual'
-          })
-        }
-        if (data[key] !== null && data[key].length === 0) {
-          setError(key, {
-            type: 'manual'
-          })
-        }
+      }
+      if (data[key] !== null && data[key].length === 0) {
+        setError(key, {
+          type: 'manual'
+        })
       }
     }
   }
@@ -62,8 +60,6 @@ const AddUser = ({ open, toggleSidebar }) => {
     for (const key in defaultValues) {
       setValue(key, '')
     }
-    setRole('subscriber')
-    setPlan('basic')
   }
 
   return (
@@ -105,12 +101,12 @@ const AddUser = ({ open, toggleSidebar }) => {
           <FormText color='muted'>You can use letters, numbers & periods</FormText>
         </div>
         <div className='mb-1'>
-          <Label className='form-label' for='contact'>Contact <span className='text-danger'>*</span></Label>
+          <Label className='form-label' for='phone'>Phone <span className='text-danger'>*</span></Label>
           <Controller
-            name='contact'
+            name='phone'
             control={control}
             render={({ field }) => (
-              <Input id='contact' placeholder='(397) 294-5153' invalid={errors.contact && true} {...field} />
+              <Input id='phone' placeholder='(397) 294-5153' invalid={errors.phone && true} {...field} />
             )}
           />
         </div>
@@ -125,9 +121,9 @@ const AddUser = ({ open, toggleSidebar }) => {
               <Select
                 isClearable={false}
                 classNamePrefix='select'
-                options={countryOptions}
+                options={roleOptions}
                 theme={selectThemeColors}
-                className={classnames('react-select', { 'is-invalid': data !== null && data.role === null })}
+                className={classnames('react-select', { 'is-invalid': userData !== null && userData.role === null })}
                 {...field}
               />
             )}
