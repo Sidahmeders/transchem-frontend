@@ -19,7 +19,7 @@ export default function buildUsersManagement({ roles, setRoles, usersData, setUs
       }))
     },
     updateRoles: (updatedRole) => {
-      roles.all.forEach((role) => (role.id === updatedRole.id ? Object.assign(role, updatedRole) : null))
+      roles.all.forEach((role) => (role.id === updatedRole.id ? Object.assign(role, updatedRole) : role))
       setRoles(() => roles)
     },
     setSelectedRole: (selectedRole) => {
@@ -27,6 +27,9 @@ export default function buildUsersManagement({ roles, setRoles, usersData, setUs
         ...roles,
         selected: selectedRole
       }))
+    },
+    getRoleOptions: () => {
+      return roles.all.map((role) => ({ id: role.id, label: role.name, value: role.name }))
     },
     
     fetchUsers: async () => {
@@ -38,6 +41,13 @@ export default function buildUsersManagement({ roles, setRoles, usersData, setUs
       const response = await axios.post('http://localhost:5000/api/auth/register', userInfo)
       if (response.status !== 200) return null
       setUsersData(() => ([...usersData, response.data]))
+    },
+    putUser: async (userInfo) => {
+      const response = await axios.put(`http://localhost:5000/api/users/${userInfo.id}`, userInfo)
+      if (response.status !== 200) return null
+      const updatedUser = response.data
+      const newUsersData = usersData.map((user) => (user.id === updatedUser.id ? Object.assign(user, updatedUser) : user))
+      setUsersData(() => newUsersData)
     }
   })
 }

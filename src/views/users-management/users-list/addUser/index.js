@@ -9,8 +9,6 @@ import { ContextConsumer } from '@context'
 
 const checkIsValid = data => Object.values(data).every(field => (typeof field === 'object' ? field !== null : field.length > 0))
 
-const getRoleOptions = (roles) => roles.map((role) => ({ id: role.id, label: role.name }))
-
 const defaultValues = {
   fullName: '',
   email: '',
@@ -19,9 +17,9 @@ const defaultValues = {
 }
 
 const AddUser = ({ open, toggleSidebar }) => {
-  const { roles, usersManagement } = useContext(ContextConsumer)
-  const { postNewUser } = usersManagement
-  const roleOptions = getRoleOptions(roles.all)
+  const { usersManagement } = useContext(ContextConsumer)
+  const { postNewUser, getRoleOptions } = usersManagement
+  const roleOptions = getRoleOptions()
   const [userData, setUserData] = useState(null)
 
   const {
@@ -34,9 +32,11 @@ const AddUser = ({ open, toggleSidebar }) => {
 
   const onSubmit = async (data) => {
     setUserData(data)
-
     if (checkIsValid(data)) {
-      const newUser = await postNewUser(data)
+      const role = data.role
+      delete data.role
+      const [roleName, roleId] = [role.value, role.id]
+      const newUser = await postNewUser({...data, roleName, roleId })
       if (newUser === null) return // TODO: Display the Errors
       toggleSidebar()
       return

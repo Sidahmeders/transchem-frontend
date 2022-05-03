@@ -1,13 +1,26 @@
 import '@styles/react/libs/react-select/_react-select.scss'
-import { TextInput, TextInputValidation, SelectBox, CheckBox, SubmitButton } from './FormInputs'
+import { TextInput, SelectBox, CheckBox, SubmitButton } from './FormInputs'
 import { Row, Modal, ModalBody, ModalHeader } from 'reactstrap'
-import { statusOptions, countryOptions, languageOptions } from './data'
+import { useState } from 'react'
 
-const EditUser = ({ defaultValues, show, setShow }) => {
-  const onSubmit = (event) => {
+const EditUser = ({ userInfo, roleOptions, putUser, show, setShow }) => {
+  const [userUpdateInfo, setUserUpdateInfo] = useState({})
+  const onChangeHandler = (event) => {
+    if (event.id) {
+      const [roleName, roleId] = [event.value, event.id]
+      setUserUpdateInfo(() => ({ ...userUpdateInfo, roleName, roleId }))
+    } else {
+      const target = event.target
+      const [key, value] = [target.id, target.value]
+      setUserUpdateInfo(() => ({ ...userUpdateInfo, [key]: value }))
+    }
+  }
+  
+  const onSubmit = async (event) => {
     event.preventDefault()
-    // TODO: Handle getting the form data
-    console.log(event.target, 'Payload...')
+    const updatedUser = putUser({ id: userInfo.id, ...userUpdateInfo })
+    if (updatedUser === null) return // TODO: Display the Errors
+    setShow(false)
   }
 
   return (
@@ -20,16 +33,35 @@ const EditUser = ({ defaultValues, show, setShow }) => {
             <p>Updating user details will receive a privacy audit.</p>
           </div>
           <Row tag='form' className='gy-1 pt-75' onSubmit={onSubmit}>
-            <TextInputValidation defaultValues={defaultValues} label='fullName' />
-            <TextInputValidation defaultValues={defaultValues} label='username' />
-            <TextInputValidation defaultValues={defaultValues} label='company' />
-            <TextInput label='Billing Email' keyName='email' defaultValue='example@domain.com' />
-            <SelectBox placeholder='Status' options={statusOptions} />
-            <TextInput label='Tax ID' keyName='tax-id' defaultValue='Tax-8894' />
-            <TextInput label='Contact' keyName='contact' defaultValue='+1 609 933 4422' />
-            <SelectBox label='Language' options={languageOptions} />
-            <SelectBox label='Country' options={countryOptions} />
-            <CheckBox keyName='billing-switch' label='Use as a billing address?' />
+            <TextInput
+              onChangeHandler={onChangeHandler}
+              defaultValue={userInfo.fullName}
+              id='fullName'
+              label='fullName'
+            />
+            <TextInput
+              id='email' 
+              readOnly={true}
+              defaultValue={userInfo.email}
+              label='Email'
+            />
+            <TextInput 
+              onChangeHandler={onChangeHandler}
+              id='phone' 
+              label='Phone Number'
+              defaultValue={userInfo.phone}
+            />
+            <SelectBox 
+              onChangeHandler={onChangeHandler}
+              id='role' 
+              label='RoleName'
+              options={roleOptions}
+            />
+            <CheckBox
+              onChangeHandler={onChangeHandler}
+              id='isAuthorized'
+              label='do you want to Authorize this user?'
+            />
             <SubmitButton setShow={setShow} />
           </Row>
         </ModalBody>

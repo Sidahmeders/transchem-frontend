@@ -1,53 +1,26 @@
-import { Col, Input, Label, FormFeedback, Button } from 'reactstrap'
+import { Col, Input, Label, Button } from 'reactstrap'
 import Select from 'react-select'
 import { Check, X } from 'react-feather'
-import { Controller, useForm } from 'react-hook-form'
 import { selectThemeColors } from '@utils'
 
-export const TextInput = ({ label, keyName, defaultValue }) => (
+export const TextInput = ({ onChangeHandler, id, label, readOnly, defaultValue = 'NOT SET' }) => (
   <Col md={6} xs={12}>
-    <Label className='form-label' for={keyName}>{label}</Label>
-    <Input id={keyName} defaultValue={defaultValue} placeholder={defaultValue} />
+    <Label className='form-label' for={id}>{label}</Label>
+    <Input onChange={onChangeHandler} id={id} readOnly={readOnly} defaultValue={defaultValue} />
   </Col>
 )
 
-export const TextInputValidation = ({ label, defaultValues }) => {
-  const {
-    control,
-    formState: { errors }
-  } = useForm({ defaultValues })
-
+export const SelectBox = ({ onChangeHandler, id, label, options }) => {
   return (
     <Col md={6} xs={12}>
-      <Label className='form-label' for={label}>{label}</Label>
-      <Controller
-        control={control}
-        name={label}
-        render={({ field }) => (
-          <Input 
-            {...field} 
-            id={label} 
-            label={label} 
-            value={field.value} 
-            invalid={errors[label] && true} 
-          />
-        )}
-      />
-      {errors[label] && <FormFeedback>Please enter a valid {label}</FormFeedback>}
-    </Col>
-  )
-}
-
-export const SelectBox = ({ label, options }) => {
-  return (
-    <Col md={6} xs={12}>
-      <Label className='form-label' for={label}>{label}</Label>
+      <Label className='form-label' for={id}>{label}</Label>
       <Select
-        id={label}
+        id={id}
         isClearable={false}
         className='react-select'
         classNamePrefix='select'
         options={options}
+        onChange={onChangeHandler}
         theme={selectThemeColors}
         defaultValue={options[0]}
       />
@@ -55,13 +28,13 @@ export const SelectBox = ({ label, options }) => {
   )
 }
 
-export const CheckBox = ({ label, keyName }) => {
+export const CheckBox = ({ onChangeHandler, id, label }) => {
   return (
     <Col xs={12}>
       <div className='d-flex align-items-center'>
         <div className='form-switch'>
-          <Input type='switch' defaultChecked id={keyName} name={keyName} />
-          <Label className='form-check-label' htmlFor={keyName}>
+          <Input onChange={onChangeHandler} type='switch' defaultChecked id={id} name={id} />
+          <Label className='form-check-label' htmlFor={id}>
             <span className='switch-icon-left'>
               <Check size={14} />
             </span>
@@ -70,7 +43,7 @@ export const CheckBox = ({ label, keyName }) => {
             </span>
           </Label>
         </div>
-        <Label className='form-check-label fw-bolder' htmlFor={keyName}>{label}</Label>
+        <Label className='form-check-label fw-bolder' htmlFor={id}>{label}</Label>
       </div>
     </Col>
   )

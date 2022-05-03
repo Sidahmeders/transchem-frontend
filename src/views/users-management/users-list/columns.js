@@ -58,7 +58,7 @@ const renderRole = row => {
   )
 }
 
-const isVerifiedObj = {
+const isAuthorizedObj = {
   false: 'light-warning',
   true: 'light-success'
 }
@@ -106,11 +106,11 @@ export const columns = [
     name: 'Status',
     minWidth: '130px',
     sortable: true,
-    sortField: 'isVerified',
-    selector: row => row.isVerified,
+    sortField: 'isAuthorized',
+    selector: row => row.isAuthorized,
     cell: row => (
-      <Badge className='text-capitalize' color={isVerifiedObj[row.isVerified]} pill>
-        {row.isVerified ? 'verified' : 'unauthorized'}
+      <Badge className='text-capitalize' color={isAuthorizedObj[row.isAuthorized]} pill>
+        {row.isAuthorized ? 'verified' : 'unauthorized'}
       </Badge>
     )
   },

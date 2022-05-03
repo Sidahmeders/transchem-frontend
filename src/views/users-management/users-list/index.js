@@ -13,7 +13,8 @@ import { ContextConsumer } from '@context'
 
 const UsersList = () => {
   const { usersData, usersManagement } = useContext(ContextConsumer)
-  const { fetchUsers } = usersManagement
+  const { fetchUsers, getRoleOptions, putUser } = usersManagement
+  const roleOptions = getRoleOptions()
 
   const [searchTerm, setSearchTerm] = useState('')
   const [sidebarOpen, setSidebarOpen] = useState(false)
@@ -41,7 +42,13 @@ const UsersList = () => {
       <p className='mb-2'>some text to describe what our users will be doing and what rights and status they posess</p>
       <Card className='overflow-hidden'>
         <div className='react-dataTable'>
-          <EditUser defaultValues={userInfo} show={show} setShow={setShow} />
+          <EditUser
+            userInfo={userInfo}
+            roleOptions={roleOptions}
+            putUser={putUser}
+            show={show}
+            setShow={setShow}
+          />
           <DataTable
             pagination
             responsive
