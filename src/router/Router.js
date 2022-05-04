@@ -8,7 +8,7 @@ const Router = ({ allRoutes }) => {
   const getHomeRoute = () => {
     const user = getUserData()
     if (user) {
-      return getHomeRouteForLoggedInUser(user.role)
+      return getHomeRouteForLoggedInUser({ isAuthorized: user.isAuthorized, userRole: user.roleName })
     } else {
       return '/login'
     }

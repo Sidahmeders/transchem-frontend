@@ -12,14 +12,14 @@ const LogoutHandler = () => localStorage.removeItem('userData')
 
 const UserDropdown = () => {
   const user = Object(getUserData())
-  const { username, role, avatar } = user
+  const { username, roleName, avatar } = user
 
   return (
     <UncontrolledDropdown tag='li' className='dropdown-user nav-item'>
       <DropdownToggle href='/' tag='a' className='nav-link dropdown-user-link' onClick={e => e.preventDefault()}>
         <div className='user-nav d-sm-flex d-none'>
           <span className='user-name fw-bold'>{username}</span>
-          <span className='user-status'>{role}</span>
+          <span className='user-status'>{roleName}</span>
         </div>
         <Avatar img={avatar} imgHeight='40' imgWidth='40' status='online' />
       </DropdownToggle>

@@ -7,7 +7,6 @@ import * as yup from 'yup'
 import { useForm, Controller } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 
-
 const signInHandler = async (event) => {
   event.preventDefault()
   const inputElements = document.getElementById('login-form').getElementsByTagName('input')
@@ -19,7 +18,7 @@ const signInHandler = async (event) => {
   if (status !== 200) return
   
   localStorage.setItem('userData', JSON.stringify(data))
-  location.href = getHomeRouteForLoggedInUser(data?.role)
+  location.href = getHomeRouteForLoggedInUser()
 }
 
 const SignupSchema = yup.object().shape({
