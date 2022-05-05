@@ -1,9 +1,9 @@
 import '@styles/react/libs/react-select/_react-select.scss'
-import { TextInput, SelectBox, CheckBox, SubmitButton } from './FormInputs'
-import { Row, Modal, ModalBody, ModalHeader } from 'reactstrap'
+import { TextInput, SelectBox, CheckBox } from './FormInputs'
+import { Row, Col, Button, Modal, ModalBody, ModalHeader } from 'reactstrap'
 import { useState } from 'react'
 
-const EditUser = ({ userInfo, roleOptions, putUser, show, setShow }) => {
+const EditUser = ({ userInfo, putUser, roleOptions, show, setShow }) => {
   const [userUpdateInfo, setUserUpdateInfo] = useState({})
   const onChangeHandler = (event) => {
     if (event.id) {
@@ -12,7 +12,8 @@ const EditUser = ({ userInfo, roleOptions, putUser, show, setShow }) => {
     } else {
       const target = event.target
       const [key, value] = [target.id, target.value]
-      setUserUpdateInfo(() => ({ ...userUpdateInfo, [key]: value }))
+      const isCheckBox = key === 'isAuthorized'
+      setUserUpdateInfo(() => ({ ...userUpdateInfo, [key]: isCheckBox ? target.checked : value }))
     }
   }
   
@@ -52,17 +53,25 @@ const EditUser = ({ userInfo, roleOptions, putUser, show, setShow }) => {
               defaultValue={userInfo.phone}
             />
             <SelectBox 
-              onChangeHandler={onChangeHandler}
               id='role' 
               label='RoleName'
               options={roleOptions}
+              onChangeHandler={onChangeHandler}
+              defaultValue={{ id: userInfo.roleId, label: userInfo.roleName }}
             />
             <CheckBox
+              isAuthorized={userInfo.isAuthorized}
               onChangeHandler={onChangeHandler}
               id='isAuthorized'
               label='do you want to Authorize this user?'
             />
-            <SubmitButton setShow={setShow} />
+            <Col xs={12} className='text-center mt-2 pt-50'>
+              <Button type='submit' className='me-1' color='primary'>Submit</Button>
+              <Button type='reset' color='secondary' outline onClick={() => {
+                setShow(false)
+                setUserUpdateInfo({})
+                }}>Discard</Button>
+            </Col>
           </Row>
         </ModalBody>
       </Modal>

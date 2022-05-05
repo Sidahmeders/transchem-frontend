@@ -1,17 +1,19 @@
 import { createContext, useState } from 'react'
-import buildUsersManagement from './users-managment'
+import buildUsersManagement from './users-management'
+import { getUserData } from '@utils'
 
 const Context = createContext()
 
 function ContextProvider(props) {
-    // users managment
+    // users management
+    const LoggedInUserInfo = getUserData()
     const [roles, setRoles] = useState({
         all: [],
         selected: {},
-        userAccess: {}
+        userAccess: LoggedInUserInfo.userRole
     })
     const [usersData, setUsersData] = useState([])
-
+    
     const usersManagement = buildUsersManagement({ roles, setRoles, usersData, setUsersData })
     
     // other modules...
@@ -21,6 +23,7 @@ function ContextProvider(props) {
     return (
         <Context.Provider
             value={{
+                LoggedInUserInfo,
                 roles,
                 usersData,
                 usersManagement,

@@ -2,14 +2,12 @@ import axios from "axios"
 
 export default function buildUsersManagement({ roles, setRoles, usersData, setUsersData }) {
   return Object.freeze({
-    fetchRoles: async () => {
-      const response = await axios.get('http://localhost:5000/api/access/roles')
+    fetchRoles: async (userInfo) => {
+      const response = await axios.get(`http://localhost:5000/api/access/roles?userId=${userInfo.id}`)
       if (response.status !== 200) return null
-      const { userAccess, rolesList } = response.data
       setRoles(() => ({
         ...roles,
-        all: rolesList,
-        userAccess
+        all: response.data
       }))
     },
     addNewRole: (newRole) => {
@@ -32,8 +30,8 @@ export default function buildUsersManagement({ roles, setRoles, usersData, setUs
       return roles.all.map((role) => ({ id: role.id, label: role.name, value: role.name }))
     },
     
-    fetchUsers: async () => {
-      const response = await axios.get('http://localhost:5000/api/users')
+    fetchUsers: async (userInfo) => {
+      const response = await axios.get(`http://localhost:5000/api/users?id=${userInfo.id}&email=${userInfo.email}`)
       if (response.status !== 200) return null
       setUsersData(() => response.data)
     },

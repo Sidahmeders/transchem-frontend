@@ -2,8 +2,8 @@ import { Mail, Home, Shield } from 'react-feather'
 
 const myNavigations = [
   {
-    id: 'users-managment',
-    title: 'Users Managment',
+    id: 'users-management',
+    title: 'Users Management',
     icon: <Shield size={20} />,
     navLink: '/users-management',
     action: 'read',

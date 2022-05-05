@@ -6,13 +6,15 @@ import CardItem from './CardItem'
 import { ContextConsumer } from '@context'
 
 const RoleCards = () => {
-  const { usersManagement, roles } = useContext(ContextConsumer)
+  const { LoggedInUserInfo, usersManagement, roles } = useContext(ContextConsumer)
   const { fetchRoles, addNewRole, updateRoles, setSelectedRole } = usersManagement
   
   const [show, setShow] = useState(false)
   const [modalType, setModalType] = useState('Add New')
 
-  useEffect(() => fetchRoles(), [])
+  useEffect(() => {
+    fetchRoles(LoggedInUserInfo)
+  }, [])
 
   return (
     <Fragment>
@@ -35,6 +37,7 @@ const RoleCards = () => {
           setShow={setShow}
           modalType={modalType}
           setModalType={setModalType}
+          LoggedInUserInfo={LoggedInUserInfo}
         />
         <AddNewRoleItem
           setShow={setShow}

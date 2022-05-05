@@ -1,5 +1,6 @@
-import { Col, Input, Label, Button } from 'reactstrap'
+import { useState } from 'react'
 import Select from 'react-select'
+import { Col, Input, Label } from 'reactstrap'
 import { Check, X } from 'react-feather'
 import { selectThemeColors } from '@utils'
 
@@ -10,7 +11,8 @@ export const TextInput = ({ onChangeHandler, id, label, readOnly, defaultValue =
   </Col>
 )
 
-export const SelectBox = ({ onChangeHandler, id, label, options }) => {
+export const SelectBox = ({ id, label, options, defaultValue, onChangeHandler }) => {
+  const [selectedOption, setSelectedOption] = useState(defaultValue)
   return (
     <Col md={6} xs={12}>
       <Label className='form-label' for={id}>{label}</Label>
@@ -20,20 +22,32 @@ export const SelectBox = ({ onChangeHandler, id, label, options }) => {
         className='react-select'
         classNamePrefix='select'
         options={options}
-        onChange={onChangeHandler}
+        onChange={value => {
+          setSelectedOption(value)
+          onChangeHandler(value)
+        }}
         theme={selectThemeColors}
-        defaultValue={options[0]}
+        defaultValue={selectedOption}
       />
     </Col>
   )
 }
 
-export const CheckBox = ({ onChangeHandler, id, label }) => {
+export const CheckBox = ({ id, label, isAuthorized, onChangeHandler }) => {
   return (
     <Col xs={12}>
       <div className='d-flex align-items-center'>
         <div className='form-switch'>
-          <Input onChange={onChangeHandler} type='switch' defaultChecked id={id} name={id} />
+          <Input
+            id={id}
+            name={id}
+            type='switch'
+            defaultChecked={isAuthorized}
+            onChange={(event) => { 
+              isAuthorized = !isAuthorized
+              onChangeHandler(event)
+            }}
+          />
           <Label className='form-check-label' htmlFor={id}>
             <span className='switch-icon-left'>
               <Check size={14} />
@@ -49,9 +63,3 @@ export const CheckBox = ({ onChangeHandler, id, label }) => {
   )
 }
 
-export const SubmitButton = ({ setShow }) => (
-  <Col xs={12} className='text-center mt-2 pt-50'>
-    <Button type='submit' className='me-1' color='primary'>Submit</Button>
-    <Button type='reset' color='secondary' outline onClick={() => setShow(false)}>Discard</Button>
-  </Col>
-)

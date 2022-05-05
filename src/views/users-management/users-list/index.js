@@ -12,7 +12,7 @@ import EditUser from './EditUser'
 import { ContextConsumer } from '@context'
 
 const UsersList = () => {
-  const { usersData, usersManagement } = useContext(ContextConsumer)
+  const { LoggedInUserInfo, usersData, usersManagement } = useContext(ContextConsumer)
   const { fetchUsers, getRoleOptions, putUser } = usersManagement
   const roleOptions = getRoleOptions()
 
@@ -33,7 +33,7 @@ const UsersList = () => {
   }
 
   useEffect(() => {
-    fetchUsers()
+    fetchUsers(LoggedInUserInfo)
   }, [])
 
   return (
