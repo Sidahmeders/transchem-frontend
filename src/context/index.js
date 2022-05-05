@@ -10,7 +10,7 @@ function ContextProvider(props) {
     const [roles, setRoles] = useState({
         all: [],
         selected: {},
-        userAccess: LoggedInUserInfo.userRole
+        userAccess: Object(LoggedInUserInfo?.userRole)
     })
     const [usersData, setUsersData] = useState([])
     
