@@ -103,7 +103,13 @@ export default function EditRoleTable ({ role, addNewRole, updateRoles, show, se
             <h4 className='mt-2 pt-50'>Role Permissions</h4>
             <Table className='table-flush-spacing' responsive>
               <tbody>
-                {role.permissions?.map((resource, index) => (<RoleNameItem key={index} resource={resource} />))}
+                {role.permissions?.map((resource, index) => (
+                  <RoleNameItem
+                    key={index}
+                    permission={LoggedInUserInfo?.userRole?.permissions[index]}
+                    resource={resource}
+                  />
+                ))}
               </tbody>
             </Table>
           </Col>
@@ -114,7 +120,7 @@ export default function EditRoleTable ({ role, addNewRole, updateRoles, show, se
   )
 }
 
-const RoleNameItem = ({ resource }) => {
+const RoleNameItem = ({ resource, permission }) => {
   const [state, setState] = useState({ ...resource.actions, crud: false })
   return (
     <tr>
@@ -124,7 +130,7 @@ const RoleNameItem = ({ resource }) => {
           {Object.keys(resource.actions).map((action, index) => (
             <RoleAction
               key={index}
-              canAssign={!resource.actions[action]}
+              canAssign={!permission.actions[action]}
               label={action}
               name={resource.name}
               state={state}

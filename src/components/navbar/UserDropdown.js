@@ -12,7 +12,6 @@ const LogoutHandler = () => localStorage.removeItem('userData')
 
 const UserDropdown = () => {
   const user = getUserData()
-  console.log(user)
   const { fullName, roleName, avatar } = user
 
   return (
