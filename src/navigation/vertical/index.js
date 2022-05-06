@@ -1,4 +1,4 @@
-import { Mail, Home, Shield } from 'react-feather'
+import { Mail, Home, Shield, Square, Map, Activity, ShoppingBag } from 'react-feather'
 
 const myNavigations = [
   {
@@ -8,6 +8,37 @@ const myNavigations = [
     navLink: '/users-management',
     action: 'read',
     resource: 'users-management'
+  },
+  {
+    id: 'admin-dashboard',
+    title: 'Dashboard',
+    icon: <Square size={20} />,
+    children: [
+      {
+        id: 'owned-sites',
+        title: 'Owned Sites',
+        icon: <Map />,
+        navLink: '/dashboard/owned-sites',
+        action: 'read',
+        resource: 'owned-sites'
+      },
+      {
+        id: 'activity-logs',
+        title: 'Activity Logs',
+        icon: <Activity />,
+        navLink: '/dashboard/activity-logs',
+        action: 'read',
+        resource: 'activity-logs'
+      },
+      {
+        id: 'stock-overview',
+        title: 'Stock Overview',
+        icon: <ShoppingBag />,
+        navLink: '/dashboard/stock-overview',
+        action: 'read',
+        resource: 'stock-overview'
+      }
+    ]
   }
 ]
 

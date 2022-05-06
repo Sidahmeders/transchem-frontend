@@ -3,6 +3,9 @@ import ReactDOM from 'react-dom'
 import { Suspense, lazy } from 'react'
 import { BrowserRouter } from 'react-router-dom'
 
+// ** mapbox styles
+import 'mapbox-gl/dist/mapbox-gl.css'
+
 // ** Redux Imports
 import { store } from './redux/store'
 import { Provider } from 'react-redux'
