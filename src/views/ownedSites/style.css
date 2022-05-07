@@ -7,46 +7,9 @@
   z-index: 9;
 }
 
-#map-container a {
-  color: #404040;
-  text-decoration: none;
-}
-
-#map-container a:hover {
-  color: #101010;
-}
-
-#map-container .sidebar {
-  width: 28%;
-  height: 100%;
-  overflow: hidden;
-  border-right: 1px solid #0004;
-  position: absolute;
-  top: 0;
-  z-index: 2;
-  background: #eee;
-}
-
 #map-container .map {
   width: 100%;
   height: 100%;
-}
-
-#map-container .heading {
-  background: #fff;
-  border-bottom: 1px solid #999;
-  height: 60px;
-  line-height: 60px;
-  padding: 0 5px;
-}
-
-#map-container .heading h1 {
-  font-size: 22px;
-  margin: 0;
-  font-weight: 400;
-  line-height: 20px;
-  padding: 20px 2px;
-  color: #999;
 }
 
 /* Marker tweaks */

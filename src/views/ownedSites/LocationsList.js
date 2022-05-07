@@ -12,7 +12,6 @@ import {
 
 const LocationItem = ({ index, store, onSiteClick }) => {
   const phone = store?.properties?.phoneFormatted || ''
-  const distance = Math.round(store.properties.distance * 100) / 100  || ''
   const address = store.properties.address
   const city = store.properties.city
   const storeId = store.properties.id
@@ -30,9 +29,6 @@ const LocationItem = ({ index, store, onSiteClick }) => {
             city: <span style={{color: '#f3f'}}>{city}</span>
             <br />
             phone: <span style={{color: '#f3f'}}>{phone}</span>
-            <div>
-              <strong>{distance ? `${distance} miles away` : ''}</strong>
-            </div>
           </div>
         </AccordionBody>
       </AccordionItem>
@@ -40,7 +36,7 @@ const LocationItem = ({ index, store, onSiteClick }) => {
   )
 }
 
-export default function OffCanvasPlacement({ features, flyToMarker, createPopUp }) {
+export default function LocationsList({ features, flyToMarker, createPopUp }) {
   const [canvasOpen, setCanvasOpen] = useState(false)
   const toggleCanvas = () => setCanvasOpen(!canvasOpen)
 
@@ -54,10 +50,6 @@ export default function OffCanvasPlacement({ features, flyToMarker, createPopUp 
         createPopUp(feature)
       }
     })
-
-    const activeItem = document.getElementsByClassName('active')
-    if (activeItem[0]) activeItem[0].classList.remove('active')
-    target.parentNode.classList.add('active')
   }
 
   return (

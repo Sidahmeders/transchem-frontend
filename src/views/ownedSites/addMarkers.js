@@ -1,6 +1,7 @@
 import mapboxgl from '!mapbox-gl'
 
 export default function addMarkers({ stores, map, flyToMarker, createPopUp }) {
+  map.current.addSource('places', { type: 'geojson', data: stores })
   /* For each feature in the GeoJSON object above: */
   stores.features.forEach((marker) => {
     const markerElement = document.createElement('div')
@@ -12,11 +13,8 @@ export default function addMarkers({ stores, map, flyToMarker, createPopUp }) {
       createPopUp(marker)
     })
 
-    /**
-     * Create a marker using the div element
-     * defined above and add it to the map.
-     **/
-    new mapboxgl.Marker(markerElement, { offset: [0, -23] })
+    new mapboxgl
+      .Marker(markerElement, { offset: [0, -23] })
       .setLngLat(marker.geometry.coordinates)
       .addTo(map.current)
   })
