@@ -40,14 +40,7 @@ const LocationItem = ({ index, store, onSiteClick }) => {
   )
 }
 
-const containerStyle = {
-  border: "10px solid white",
-  margin: 0,
-  display: 'flex',
-  justifyContent: 'center'
-}
-
-const OffCanvasPlacement = ({ label, features, flyToMarker, createPopUp }) => {
+export default function OffCanvasPlacement({ features, flyToMarker, createPopUp }) {
   const [canvasOpen, setCanvasOpen] = useState(false)
   const toggleCanvas = () => setCanvasOpen(!canvasOpen)
 
@@ -68,8 +61,14 @@ const OffCanvasPlacement = ({ label, features, flyToMarker, createPopUp }) => {
   }
 
   return (
-    <div className='demo-inline-spacing' style={containerStyle} >
-      <Button style={{ margin: '10px 15px' }} color='primary' onClick={toggleCanvas}>{label}</Button>
+    <>
+      <Button
+        color='primary' 
+        style={{ margin: '10px 15px' }}
+        onClick={toggleCanvas}
+        >
+          Our Locations
+        </Button>
       <Offcanvas direction='end' isOpen={canvasOpen} toggle={toggleCanvas}>
         <OffcanvasHeader toggle={toggleCanvas}>Our Locations</OffcanvasHeader>
         <OffcanvasBody className='my-auto mx-0 flex-grow-0'>
@@ -85,8 +84,6 @@ const OffCanvasPlacement = ({ label, features, flyToMarker, createPopUp }) => {
         </UncontrolledAccordion>
         </OffcanvasBody>
       </Offcanvas>
-    </div>
+    </>
   )
 }
-
-export default OffCanvasPlacement

@@ -5,8 +5,18 @@ import './style.css'
 import stores from './stores'
 import addMarkers from './addMarkers'
 import LocationsOffCanvas from './LocationsOffCanvas'
+import AddNewSite from './AddNewSite'
 
 mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_TOKEN
+
+const containerStyle = {
+  border: "8px solid #7367f0",
+  borderBottom: '0',
+  borderRadius: '50px 50px 0 0',
+  margin: 0,
+  display: 'flex',
+  justifyContent: 'center'
+}
 
 const OwnedSites = () => {
   const mapContainer = useRef(null)
@@ -68,16 +78,17 @@ const OwnedSites = () => {
 
   return (
     <>
-    <LocationsOffCanvas
-      position='end'
-      label='Our Locations'
-      features={features}
-      flyToMarker={flyToMarker}
-      createPopUp={createPopUp}
-    />
-    <div id='map-container'>
-      <div className='map' ref={mapContainer} />
-    </div>
+      <div className='demo-inline-spacing' style={containerStyle} >
+        <LocationsOffCanvas
+          features={features}
+          flyToMarker={flyToMarker}
+          createPopUp={createPopUp}
+        />
+        <AddNewSite />
+      </div>
+      <div id='map-container'>
+        <div className='map' ref={mapContainer} />
+      </div>
     </>
   )
 }
