@@ -4,6 +4,7 @@
   position: relative;
   border: 8px solid white;
   border-bottom: 0;
+  z-index: 9;
 }
 
 #map-container a {
@@ -47,55 +48,6 @@
   padding: 20px 2px;
   color: #999;
 }
-
-/* Sidebar Listings */
-
-#map-container .listings {
-  height: 100%;
-  overflow: auto;
-  padding-bottom: 60px;
-}
-
-#map-container .listings .item {
-  border-bottom: 1px solid #eee;
-  padding: 10px;
-  text-decoration: none;
-  color: #3459;
-}
-
-#map-container .listings .item:last-child { border-bottom: none; }
-
-#map-container .listings .item .title {
-  display: block;
-  color: #5D3FD3;
-  font-weight: 700;
-}
-
-#map-container .listings .item .title small { font-weight: 400; }
-
-#map-container .listings .item.active .title,
-#map-container .listings .item .title:hover { color: #3897f0; }
-
-#map-container .listings .item.active {
-  background-color: #f8f8f8;
-}
-
-#map-container ::-webkit-scrollbar {
-  width: 3px;
-  height: 3px;
-  border-left: 0;
-  background: rgba(0, 0, 0, 0.1);
-}
-
-#map-container ::-webkit-scrollbar-track {
-  background: none;
-}
-
-#map-container ::-webkit-scrollbar-thumb {
-  background: #5D3FD3;
-  border-radius: 0;
-}
-
 
 /* Marker tweaks */
 #map-container .mapboxgl-popup-close-button {
