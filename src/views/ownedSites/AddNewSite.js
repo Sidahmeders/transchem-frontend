@@ -2,19 +2,24 @@ import { useState} from 'react'
 import { Row, Col, Label, Input, Modal, Button, ModalBody, ModalHeader } from 'reactstrap'
 import Select from 'react-select'
 import { useForm } from 'react-hook-form'
-import { Home, Check, X, Briefcase } from 'react-feather'
+import { Check, X, Briefcase, AlertOctagon } from 'react-feather'
 import { selectThemeColors } from '@utils'
 import '@styles/react/libs/react-select/_react-select.scss'
 
+
 const countryOptions = [
+  { value: '', label: 'All Countries' },
+  { value: 'ca', label: 'Canada' },
+  { value: 'us', label: 'USA' },
   { value: 'uk', label: 'UK' },
-  { value: 'usa', label: 'USA' },
-  { value: 'france', label: 'France' },
-  { value: 'russia', label: 'Russia' },
-  { value: 'canada', label: 'Canada' }
+  { value: 'fr', label: 'France' },
+  { value: 'dz', label: 'Algeria' }
 ]
 
-const AddNewAddress = ({ show, setShow }) => {
+export default function AddNewSite({ setSearchQuery, setSearchCountry, searchData }) {
+  const [show, setShow] = useState(false)
+  const toggleShow = () => setShow(!show)
+
   const {
     reset,
     clearErrors,
@@ -28,9 +33,16 @@ const AddNewAddress = ({ show, setShow }) => {
     setShow(false)
     reset()
   }
-
+  
   return (
     <>
+      <Button 
+        color='primary' 
+        style={{ margin: '10px 15px' }} 
+        onClick={toggleShow}
+      >
+        Add New Site
+      </Button>
       <Modal
         isOpen={show}
         className='modal-dialog-centered modal-lg'
@@ -53,10 +65,10 @@ const AddNewAddress = ({ show, setShow }) => {
                   />
                   <label className='custom-option-item px-2 py-1' htmlFor='homeAddress'>
                     <span className='d-flex align-items-center mb-50'>
-                      <Home className='font-medium-4 me-50' />
-                      <span className='custom-option-item-title h4 fw-bolder mb-0'>Home</span>
+                      <AlertOctagon className='font-medium-4 me-50' />
+                      <span className='custom-option-item-title h4 fw-bolder mb-0'>Idle</span>
                     </span>
-                    <span className='d-block'>Delivery time (7am – 9pm)</span>
+                    <span className='d-block'>Requires Maintenance</span>
                   </label>
                 </Col>
                 <Col md={6} className='mb-md-0 mb-2'>
@@ -70,17 +82,16 @@ const AddNewAddress = ({ show, setShow }) => {
                   <label className='custom-option-item px-2 py-1' htmlFor='officeAddress'>
                     <span className='d-flex align-items-center mb-50'>
                       <Briefcase className='font-medium-4 me-50' />
-                      <span className='custom-option-item-title h4 fw-bolder mb-0'>Office</span>
+                      <span className='custom-option-item-title h4 fw-bolder mb-0'>Active</span>
                     </span>
-                    <span className='d-block'>Delivery time (10am – 6pm)</span>
+                    <span className='d-block'>Working Hours (10am – 6pm)</span>
                   </label>
                 </Col>
               </Row>
             </Col>
-          
             <Col xs={12}>
               <Label className='form-label' for='country'>
-                Country
+                Limit your search Query to:
               </Label>
               <Select
                 id='country'
@@ -90,37 +101,24 @@ const AddNewAddress = ({ show, setShow }) => {
                 options={countryOptions}
                 theme={selectThemeColors}
                 defaultValue={countryOptions[0]}
+                onChange={(e) => setSearchCountry(e.value)}
               />
             </Col>
             <Col xs={12}>
-              <Label className='form-label' for='addressLine1'>
-                Address Line 1
+              <Label className='form-label' for='addressLine'>
+                Search Query:
               </Label>
-              <Input id='addressLine1' placeholder='12, Business Park' />
+              <Input
+                id='addressLine'
+                placeholder='Address Line / Town / State / Province / Zip Code'
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
             </Col>
             <Col xs={12}>
-              <Label className='form-label' for='addressLine2'>
-                Address Line 2
-              </Label>
-              <Input id='addressLine2' placeholder='Mall Road' />
-            </Col>
-            <Col xs={12}>
-              <Label className='form-label' for='town'>
-                Town
-              </Label>
-              <Input id='town' placeholder='Los Angeles' />
-            </Col>
-            <Col xs={12} md={6}>
-              <Label className='form-label' for='state-province'>
-                State / Province
-              </Label>
-              <Input id='state-province' placeholder='California' />
-            </Col>
-            <Col xs={12} md={6}>
-              <Label className='form-label' for='zip-code'>
-                Zip Code
-              </Label>
-              <Input id='zip-code' placeholder='99950' />
+              <Label className='form-label' for='select-multi'>Your search results</Label>
+              <Input type='select' name='select' id='select-multi' multiple>
+                {searchData.map((item, index) => <SearchOption key={index} item={item} />)}
+              </Input>
             </Col>
             <Col xs={12}>
               <div className='d-flex align-items-center'>
@@ -136,17 +134,13 @@ const AddNewAddress = ({ show, setShow }) => {
                   </Label>
                 </div>
                 <label className='form-check-label fw-bolder' htmlFor='billing-switch'>
-                  Use as a billing address?
+                  Show this on the map?
                 </label>
               </div>
             </Col>
             <Col className='text-center' xs={12}>
-              <Button type='submit' className='me-1 mt-2' color='primary'>
-                Submit
-              </Button>
-              <Button type='reset' className='mt-2' color='secondary' outline onClick={onDiscard}>
-                Discard
-              </Button>
+              <Button type='submit' className='me-1 mt-2' color='primary'>Submit</Button>
+              <Button type='reset' className='mt-2' color='secondary' outline onClick={onDiscard}>Discard</Button>
             </Col>
           </Row>
         </ModalBody>
@@ -155,20 +149,10 @@ const AddNewAddress = ({ show, setShow }) => {
   )
 }
 
-export default function AddNewSite() {
-  const [show, setShow] = useState(false)
-  const toggleShow = () => setShow(!show)
-
+const SearchOption = ({ item }) => {
   return (
     <>
-      <Button 
-        color='primary' 
-        style={{ margin: '10px 15px' }} 
-        onClick={toggleShow}
-        >
-          Add New Site
-        </Button>
-      <AddNewAddress show={show} setShow={setShow} />
+      <option>{item.place_name}</option>  
     </>
   )
 }
