@@ -6,7 +6,6 @@ import { Check, X, Briefcase, AlertOctagon } from 'react-feather'
 import { selectThemeColors } from '@utils'
 import '@styles/react/libs/react-select/_react-select.scss'
 
-
 const countryOptions = [
   { value: '', label: 'All Countries' },
   { value: 'ca', label: 'Canada' },
@@ -19,6 +18,8 @@ const countryOptions = [
 export default function AddNewSite({ setSearchQuery, setSearchCountry, searchData }) {
   const [show, setShow] = useState(false)
   const toggleShow = () => setShow(!show)
+
+  console.log(searchData, '-+++-')
 
   const {
     reset,

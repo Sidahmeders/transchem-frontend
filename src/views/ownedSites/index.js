@@ -4,6 +4,7 @@ import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder'
 import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css'
 import Breadcrumbs from '@components/breadcrumbs'
 import './style.css'
+import NoAccessToken from './NoAccessToken'
 import addMarkers from './addMarkers'
 import LocationsList from './LocationsList'
 import AddNewSite from './AddNewSite'
@@ -21,6 +22,7 @@ const containerStyle = {
 }
 
 const OwnedSites = () => {
+  if (!mapboxgl.accessToken) return <NoAccessToken />
   const map = useRef(null)
   const [lng, lat, zoom] = [-77.034084, 38.909671, 9]
   const [stores, setStores] = useState({ features: [] })
