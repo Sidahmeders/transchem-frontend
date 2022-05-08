@@ -117,7 +117,13 @@ export default function AddNewSite({ setSearchQuery, setSearchCountry, searchDat
             </Col>
             <Col xs={12}>
               <Label className='form-label' for='select-multi'>Your search results</Label>
-              <Input type='select' name='select' id='select-multi' multiple>
+              <Input 
+                multiple
+                style={{overflowX: 'scroll', height: '200px'}}
+                type='select'
+                id='select-multi'
+                name='select'
+              >
                 {searchData.map((item, index) => <SearchOption key={index} item={item} />)}
               </Input>
             </Col>
