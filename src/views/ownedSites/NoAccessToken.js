@@ -7,7 +7,7 @@ export default () => (
     </a>
   </p>
   <p>
-    2) After you get the accessToken <span style={{color: '#f58'}}>Api Key </span>
+    2) After you get the accessToken/<span style={{color: '#f58'}}>Api Key </span>
   </p>
   <p>
     2) create A File named <span style={{color: '#f58'}}>.env.local</span>

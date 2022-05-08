@@ -10,7 +10,7 @@ import LocationsList from './LocationsList'
 import AddNewSite from './AddNewSite'
 import mockStores from './stores'
 
-mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_TOKEN
+mapboxgl.accessToken = null //process.env.REACT_APP_MAPBOX_TOKEN
 
 const containerStyle = {
   border: "8px solid #7367f0",
