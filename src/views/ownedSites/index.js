@@ -21,22 +21,26 @@ const containerStyle = {
   justifyContent: 'center'
 }
 
-const fetchSites = async (setStores) => {
+const fetchSites = async (setStore) => {
   const response = await axios.get('http://localhost:5000/api/sites')
   if (response.status !== 200) return
-  setStores(() => response.data)
+  setStore(() => response.data)
 }
 
 const OwnedSites = () => {
   if (!mapboxgl.accessToken) return <NoAccessToken />
   const map = useRef(null)
   const [lng, lat, zoom] = [-77.034084, 38.909671, 9]
-  const [stores, setStores] = useState({ features: [] })
+  const [store, setStore] = useState({ features: [] })
   const [searchParams, setSearchParams] = useState({ country: '', query: '' })
   const [searchData, setSearchData] = useState([])
 
   const setSearchQuery = (query) => setSearchParams(() => ({ ...searchParams, query }))
-  const setSearchCountry = (country) => setSearchParams(() => ({ ... searchParams, country }))
+  const setSearchCountry = (country) => setSearchParams(() => ({ ...searchParams, country }))
+  const addNewSite = (newSite) => {
+    store.features.push(newSite)
+    setStore(() => store)
+  }
 
   const flyToMarker = (currentFeature) => {
     map.current.flyTo({
@@ -60,7 +64,7 @@ const OwnedSites = () => {
   const [geocoder, setGeocoder] = useState(null)
   
   useEffect(() => {
-    fetchSites(setStores)
+    fetchSites(setStore)
   }, [])
 
   useEffect(() => {
@@ -77,7 +81,7 @@ const OwnedSites = () => {
       mapGeocoder.on('results', (data) => setSearchData(() => data.features))
       setGeocoder(() => mapGeocoder)
     } else {
-      map.current.on('load', () => addMarkers({ stores, map, flyToMarker, createPopUp }))
+      map.current.on('load', () => addMarkers({ store, map, flyToMarker, createPopUp }))
     }
   })
 
@@ -93,7 +97,7 @@ const OwnedSites = () => {
       <div style={{display: 'none'}} id='sites-search-space'></div>
       <div className='demo-inline-spacing' style={containerStyle} >
         <LocationsList
-          features={stores.features}
+          features={store.features}
           flyToMarker={flyToMarker}
           createPopUp={createPopUp}
         />
@@ -101,6 +105,7 @@ const OwnedSites = () => {
           setSearchQuery={setSearchQuery}
           setSearchCountry={setSearchCountry}
           searchData={searchData}
+          addNewSite={addNewSite}
         />
       </div>
       <div id='map-container'>

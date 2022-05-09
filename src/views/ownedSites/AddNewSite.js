@@ -1,10 +1,10 @@
 import { useState} from 'react' 
 import { Row, Col, Label, Input, Modal, Button, ModalBody, ModalHeader } from 'reactstrap'
 import Select from 'react-select'
-import { useForm } from 'react-hook-form'
 import { Check, X, Briefcase, AlertOctagon } from 'react-feather'
 import { selectThemeColors } from '@utils'
 import '@styles/react/libs/react-select/_react-select.scss'
+import axios from 'axios'
 
 const countryOptions = [
   { value: '', label: 'All Countries' },
@@ -15,24 +15,25 @@ const countryOptions = [
   { value: 'dz', label: 'Algeria' }
 ]
 
-export default function AddNewSite({ setSearchQuery, setSearchCountry, searchData }) {
+const postNewSite = async (siteInfo, addNewSite) => {
+  const response = await axios.post('http://localhost:5000/api/sites', siteInfo)
+  if (response.status !== 200) return
+  addNewSite(response.data)
+}
+
+export default function AddNewSite({ setSearchQuery, setSearchCountry, searchData, addNewSite }) {
   const [show, setShow] = useState(false)
   const toggleShow = () => setShow(!show)
+  const [data, setData] = useState({})
 
-  console.log(searchData, '-+++-')
+  const setSiteGoeJson = (site) => setData(() => ({ ...data, siteGoeJson: site }))
 
-  const {
-    reset,
-    clearErrors,
-    handleSubmit
-  } = useForm({})
+  const onDiscard = () => setShow(false)
 
-  const onSubmit = (data) => console.log(data)
-
-  const onDiscard = () => {
-    clearErrors()
+  const onSubmit = (event) => {
+    event.preventDefault()
+    postNewSite(data, addNewSite)
     setShow(false)
-    reset()
   }
   
   return (
@@ -52,7 +53,7 @@ export default function AddNewSite({ setSearchQuery, setSearchCountry, searchDat
         <ModalBody className='pb-5 px-sm-4 mx-50'>
           <h1 className='address-title text-center mb-1'>Add New Address</h1>
           <p className='address-subtitle text-center mb-2 pb-75'>Add address for billing address</p>
-          <Row tag='form' className='gy-1 gx-2' onSubmit={handleSubmit(onSubmit)}>
+          <Row tag='form' className='gy-1 gx-2' onSubmit={onSubmit}>
             <Col xs={12}>
               <Row className='custom-options-checkable'>
                 <Col md={6} className='mb-md-0 mb-2'>
@@ -92,7 +93,7 @@ export default function AddNewSite({ setSearchQuery, setSearchCountry, searchDat
             </Col>
             <Col xs={12}>
               <Label className='form-label' for='country'>
-                Limit your search Query to:
+                Limit your Search Query to:
               </Label>
               <Select
                 id='country'
@@ -116,7 +117,7 @@ export default function AddNewSite({ setSearchQuery, setSearchCountry, searchDat
               />
             </Col>
             <Col xs={12}>
-              <Label className='form-label' for='select-multi'>Your search results</Label>
+              <Label className='form-label' for='select-multi'>Your Search Results</Label>
               <Input 
                 multiple
                 style={{overflowX: 'scroll', height: '200px'}}
@@ -124,7 +125,13 @@ export default function AddNewSite({ setSearchQuery, setSearchCountry, searchDat
                 id='select-multi'
                 name='select'
               >
-                {searchData.map((item, index) => <SearchOption key={index} item={item} />)}
+                {searchData.map((item, index) => (
+                  <SearchOption
+                    setSiteGoeJson={setSiteGoeJson}
+                    key={index}
+                    item={item}
+                  />
+                ))}
               </Input>
             </Col>
             <Col xs={12}>
@@ -156,10 +163,42 @@ export default function AddNewSite({ setSearchQuery, setSearchCountry, searchDat
   )
 }
 
-const SearchOption = ({ item }) => {
+/**
+  properties: {
+    phoneFormatted: '(202) 234-7336',
+    phone: '2022347336',
+    address: '1471 P St NW',
+    city: 'Washington DC',
+    country: 'United States',
+    crossStreet: 'at 15th St NW',
+    postalCode: '20005',
+    state: 'D.C.',
+    id: 0,
+  }
+ */
+
+const buildSiteGeoJson = (site, userInfo = {}) => {
+  const geoJson = {
+    type: 'Feature',
+    geometry: {
+      type: 'Point',
+      coordinates: site.center
+    },
+    properties: Object.assign(Object(site.properties), {
+      address: site.place_name,
+      phone: userInfo.phone || '+213552104709'
+    })
+  }
+  return geoJson
+}
+
+const SearchOption = ({ item, setSiteGoeJson }) => {
+  const siteData = buildSiteGeoJson(item)
   return (
     <>
-      <option>{item.place_name}</option>  
+      <option onClick={() => setSiteGoeJson(siteData)}>
+        {item.place_name}
+      </option>  
     </>
   )
 }
