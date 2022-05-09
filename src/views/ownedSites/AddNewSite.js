@@ -17,7 +17,7 @@ const countryOptions = [
 
 const postNewSite = async (siteInfo, addNewSite) => {
   const response = await axios.post('http://localhost:5000/api/sites', siteInfo)
-  if (response.status !== 200) return
+  if (response.status !== 200) return null
   addNewSite(response.data)
 }
 
@@ -28,12 +28,16 @@ export default function AddNewSite({ setSearchQuery, setSearchCountry, searchDat
 
   const setSiteGoeJson = (site) => setData(() => ({ ...data, siteGoeJson: site }))
 
-  const onDiscard = () => setShow(false)
-
-  const onSubmit = (event) => {
-    event.preventDefault()
-    postNewSite(data, addNewSite)
+  const onDiscard = () => {
     setShow(false)
+    setData(() => {})
+  }
+
+  const onSubmit = async (event) => {
+    event.preventDefault()
+    const newSite = await postNewSite(data, addNewSite)
+    if (newSite === null) return // Dipslay the Error
+    onDiscard()
   }
   
   return (
