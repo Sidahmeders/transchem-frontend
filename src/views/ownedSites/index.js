@@ -8,7 +8,7 @@ import NoAccessToken from './NoAccessToken'
 import addMarkers from './addMarkers'
 import LocationsList from './LocationsList'
 import AddNewSite from './AddNewSite'
-import mockStores from './stores'
+import axios from 'axios'
 
 mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_TOKEN
 
@@ -19,6 +19,12 @@ const containerStyle = {
   margin: 0,
   display: 'flex',
   justifyContent: 'center'
+}
+
+const fetchSites = async (setStores) => {
+  const response = await axios.get('http://localhost:5000/api/sites')
+  if (response.status !== 200) return
+  setStores(() => response.data)
 }
 
 const OwnedSites = () => {
@@ -54,7 +60,7 @@ const OwnedSites = () => {
   const [geocoder, setGeocoder] = useState(null)
   
   useEffect(() => {
-    setStores(() => mockStores)
+    fetchSites(setStores)
   }, [])
 
   useEffect(() => {

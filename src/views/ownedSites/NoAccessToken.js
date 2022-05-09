@@ -18,6 +18,9 @@ export default () => (
     <span style={{color: '#f58'}}>Your-Api-Key</span>
   </p>
   <p>
+    4) after you do all the above make sure to restart the app server for the change to take effect
+  </p>
+  <p>
     the Api Key will look something like this:
     <code>pk.ey3ec5fHmFDo#o4fmD9@3kF9zxf55e78cd6407da2557706ca0-f8496</code>
   </p>
