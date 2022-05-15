@@ -1,4 +1,5 @@
 import axios from "axios"
+axios.defaults.withCredentials = true
 
 export default function buildUsersManagement({ roles, setRoles, usersData, setUsersData }) {
   return Object.freeze({

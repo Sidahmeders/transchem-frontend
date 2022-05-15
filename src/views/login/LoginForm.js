@@ -13,7 +13,7 @@ const signInHandler = async (event) => {
   const userInfo = {}
   Array.from(inputElements).forEach(input => (userInfo[input.type] = input.value))
 
-  const response = await axios.post('http://localhost:5000/api/auth/login', userInfo)
+  const response = await axios.post('http://localhost:5000/api/auth/login', userInfo, { withCredentials: true })
   const { status, data } = response
   if (status !== 200) return
   
